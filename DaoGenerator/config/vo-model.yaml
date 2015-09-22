@@ -1,0 +1,24 @@
+--- #VO Models
+
+
+name: SectionModel
+fields:
+    - field-name: SectionId
+      data-type: int
+    - field-name: SectionName
+      data-type: String
+    - field-name: FormTypeId
+      data-type: int
+    - field-name: FormTypeName
+      data-type: String 
+---
+
+ 
+name: FormTypeModel
+fields:
+    - field-name: FormTypeId
+      data-type: int
+    - field-name: FormTypeName
+      data-type: String
+   
+...
