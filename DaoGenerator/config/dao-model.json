@@ -1,0 +1,35 @@
+{	"dao":
+	[
+		{
+		    "comment": "This is the DAO to manage access to the SECTION table and views", 
+		    "methods": [
+		        {
+		            "input-variables": null, 
+		            "method-name": "SelectAllSections", 
+		            "return-type": "List<SectionModel>"
+		        }, 
+		        {
+		            "input-variables": [
+		                {
+		                    "data-type": "int", 
+		                    "variable-name": "SectionTypeId"
+		                }
+		            ], 
+		            "method-name": "SelectSectionsByFormTypeId", 
+		            "return-type": "List<SectionModel>"
+		        }, 
+		        {
+		            "input-variables": [
+		                {
+		                    "data-type": "int", 
+		                    "variable-name": "SectionId"
+		                }
+		            ], 
+		            "method-name": "SelectSectionBySectionId", 
+		            "return-type": "SectionModel"
+		        }
+		    ], 
+		    "name": "SectionDAO"
+		}
+	]
+}

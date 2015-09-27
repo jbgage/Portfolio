@@ -1,0 +1,33 @@
+{
+    "databaseName": "sample", 
+    "databaseSchemaName": "sample", 
+    "directories": {
+        "config": "config/", 
+        "deploy": {
+            "model": "Model/", 
+            "persistence": {
+                "dao": "Persistence/DAO/", 
+                "daoImpl": "Persistence/DAOImpl/", 
+                "factory": "Persistence/Factory/"
+            }, 
+            "profile": "Profile/", 
+            "sql": "SQL/"
+        }, 
+        "main-deployment-dir": "STAGE/"
+    }, 
+    "globalClassNameSpace": "app", 
+    "jsonModelFiles": {
+        "database": {
+            "schema": "schema-model.json", 
+            "storedProcedures": "stored-procedure-model.json", 
+            "view": "view-model.json"
+        }, 
+        "persistence": {
+            "dao": "dao-model.json", 
+            "daoFactory": "dao-factory-model.json", 
+            "daoImpl": "dao-impl-model.json"
+        }, 
+        "profile": "profile-model.json", 
+        "valueObject": "vo-model.json"
+    }
+}

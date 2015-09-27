@@ -1,0 +1,39 @@
+{   "table":
+	[
+		{
+		    "fields": [
+		        {
+		            "auto-increment": true, 
+		            "data-type": "INT", 
+		            "field-name": "SECTIONID", 
+		            "foreign-key-name": "", 
+		            "foreign-key-table": "", 
+		            "is-foreign-key-constraint": false, 
+		            "is-primary-key": true, 
+		            "length": 0
+		        }, 
+		        {
+		            "auto-increment": false, 
+		            "data-type": "VARCHAR", 
+		            "field-name": "NAME", 
+		            "foreign-key-name": "", 
+		            "foreign-key-table": "", 
+		            "is-foreign-key-constraint": false, 
+		            "is-primary-key": false, 
+		            "length": 50
+		        }, 
+		        {
+		            "auto-increment": false, 
+		            "data-type": "INT", 
+		            "field-name": "FORMTYPEID", 
+		            "foreign-key-name": "FORMTYPEID", 
+		            "foreign-key-table": "FORMTYPE", 
+		            "is-foreign-key-constraint": true, 
+		            "is-primary-key": false, 
+		            "length": 0
+		        }
+		    ], 
+		    "name": "SECTION"
+		}
+	]
+}

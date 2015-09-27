@@ -1,0 +1,26 @@
+{	
+	"value-object":
+	[
+		{
+		    "fields": [
+		        {
+		            "data-type": "int", 
+		            "field-name": "SectionId"
+		        }, 
+		        {
+		            "data-type": "String", 
+		            "field-name": "SectionName"
+		        }, 
+		        {
+		            "data-type": "int", 
+		            "field-name": "FormTypeId"
+		        }, 
+		        {
+		            "data-type": "String", 
+		            "field-name": "FormTypeName"
+		        }
+		    ], 
+		    "name": "SectionModel"
+		 }
+	]
+}

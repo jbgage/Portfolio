@@ -1,0 +1,24 @@
+{ 
+	"view":
+	[
+		{
+		    "from-clause": [
+		        {
+		            "from-table-name": "FORMTYPE"
+		        }
+		    ], 
+		    "name": "vFormType", 
+		    "select-clause": [
+		        {
+		            "select-field": "FORMTYPEID", 
+		            "table-alias": "FT"
+		        }, 
+		        {
+		            "select-field": "FORMTYPENAME", 
+		            "table-alias": "FT"
+		        }
+		    ],
+		    "where-clause":[]
+		}
+	]
+}

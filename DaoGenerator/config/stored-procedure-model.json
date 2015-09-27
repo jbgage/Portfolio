@@ -1,0 +1,51 @@
+{	
+	"stored-procedure":
+	[
+		{
+		    "input-variables": [
+		        {
+		            "data-type": "", 
+		            "field-name": "", 
+		            "length": null
+		        }
+		    ], 
+		    "insert-statement-fields": [
+		        {
+		            "field-name": ""
+		        }
+		    ], 
+		    "name": "SelectAllSections", 
+		    "output-variables": [
+		        {
+		            "data-type": "", 
+		            "field-name": "", 
+		            "length": ""
+		        }
+		    ], 
+		    "select-statement-fields": [
+		        {
+		            "field-name": "SECTIONID"
+		        }, 
+		        {
+		            "field-name": "SECTIONNAME"
+		        }, 
+		        {
+		            "field-name": "FORMTYPENAME"
+		        }, 
+		        {
+		            "field-name": "FORMTYPEID"
+		        }
+		    ], 
+		    "stored-procedure-type": "SELECT", 
+		    "table-name": null, 
+		    "update-statement-fields": [
+		        {
+		            "field-name": "", 
+		            "input-variable-name": ""
+		        }
+		    ], 
+		    "view-name": "vSectionType", 
+		    "where-clause": null
+		}
+	]
+}
