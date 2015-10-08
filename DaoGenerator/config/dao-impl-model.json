@@ -1,0 +1,59 @@
+{	"dao-impl":
+	[
+		{
+		    "comment": "This DAOImpl performs CRUD operations on the view and table relevant to SECTIONs and implements the DAO: SectionDAO ", 
+		    "dao-implemented": "SectionDAO", 
+		    "methods": [
+		        {
+		            "comment": "This method accesses the stored-procedure \"sample.GetSectionsByTypeId\" to retrieve values from the table \"SECTION\"", 
+		            "method-input-variables": [
+		                {
+		                    "data-type": "int", 
+		                    "variable-name": "SectionTypeId"
+		                }
+		            ], 
+		            "method-name": "GetSectionsByTypeId", 
+		            "result-set-parameters": [
+		                {
+		                    "database-object-field-name": "SECTIONID", 
+		                    "result-set-return-type": "int", 
+		                    "value-object-property": "SectionId"
+		                }, 
+		                {
+		                    "database-object-field-name": "SECTIONNAME", 
+		                    "result-set-return-type": "String", 
+		                    "value-object-property": "SectionName"
+		                }, 
+		                {
+		                    "database-object-field-name": "SECTIONTYPEID", 
+		                    "result-set-return-type": "int", 
+		                    "value-object-property": "SectionTypeId"
+		                }, 
+		                {
+		                    "database-object-field-name": "SECTIONTYPENAME", 
+		                    "result-set-return-type": "String", 
+		                    "value-object-property": "SectionTypeName"
+		                }, 
+		                {
+		                    "database-object-field-name": "SECTIONTYPEDESCRIPTION", 
+		                    "result-set-return-type": "String", 
+		                    "value-object-property": "SectionTypeDescription"
+		                }
+		            ], 
+		            "return-type": "list", 
+		            "sql-command-object-input-variables": [
+		                {
+		                    "command-object-input-field": "@TYPEID", 
+		                    "db-type": "SqlDbType.Int", 
+		                    "length": "", 
+		                    "variable-name": "FormTypeId"
+		                }
+		            ], 
+		            "stored-procedure-name": "sample.SelectSectionsByTypeId", 
+		            "value-object-type": "SectionModel"
+		        }
+		    ], 
+		    "name": "SectionDAOImpl"
+		}
+	]
+}

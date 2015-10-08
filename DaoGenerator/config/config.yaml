@@ -1,0 +1,29 @@
+--- #Main Yaml Config File
+databaseSchemaName: sample
+databaseName: sample
+globalClassNameSpace: app
+yamlModelFiles:
+    valueObject: vo-model.yaml
+    database:
+        schema: schema-model.yaml
+        view: view-model.yaml
+        storedProcedures: stored-procedure-model.yaml
+    profile: profile-model.yaml
+    persistence:
+        dao: dao-model.yaml
+        daoFactory: dao-factory-model.yaml
+        daoImpl: dao-impl-model.yaml
+directories:
+    main-deployment-dir: "../STAGE/"
+    #main-persistence-dir: Persistence
+    config: "../config/"
+    deploy: 
+        model: "Model/"
+        profile: "Profile/"
+        sql: "SQL/"
+        persistence: 
+            dao: "Persistence/DAO/"
+            daoImpl: "Persistence/DAOImpl/"
+            factory: "Persistence/Factory/"
+        
+...

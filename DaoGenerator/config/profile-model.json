@@ -1,0 +1,46 @@
+{	"profile":
+	[
+		{
+		    "comment": "This profile performs actions against the Reference DAO and associated mid-tier objects", 
+		    "methods": [
+		        {
+		            "comment": "This method gets all references from the data-base", 
+		            "dao-input-parameters": [
+		                {
+		                    "input-parameter": ""
+		                }
+		            ], 
+		            "dao-method-name": "GetAllRefs", 
+		            "dao-referenced": "RefDAO", 
+		            "input-variables-list": [
+		                {
+		                    "data-type": "", 
+		                    "variable-name": ""
+		                }
+		            ], 
+		            "method-name": "GetAllReferences", 
+		            "return-type": "list"
+		        }, 
+		        {
+		            "comment": "This method gets a specific reference from the data-base by a parameterized reference id", 
+		            "dao-input-parameters": [
+		                {
+		                    "input-parameter": "refId"
+		                }
+		            ], 
+		            "dao-method-name": "GetRefByRefId", 
+		            "dao-referenced": "RefDAO", 
+		            "input-variables-list": [
+		                {
+		                    "data-type": "int", 
+		                    "variable-name": "refId"
+		                }
+		            ], 
+		            "method-name": "GetReferenceByRefId", 
+		            "return-type": "ReferenceVO"
+		        }
+		    ], 
+		    "name": "RefProfile"
+		}
+	]
+}

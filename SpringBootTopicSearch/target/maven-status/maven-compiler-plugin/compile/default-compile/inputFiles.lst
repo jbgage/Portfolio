@@ -1,0 +1,7 @@
+/home/bgage/workspace/github/SpringBootTopicSearch/src/main/java/topics/service/DocumentService.java
+/home/bgage/workspace/github/SpringBootTopicSearch/src/main/java/topics/core/SpringBootTopicSearch.java
+/home/bgage/workspace/github/SpringBootTopicSearch/src/main/java/topics/util/TopicModellingUtility.java
+/home/bgage/workspace/github/SpringBootTopicSearch/src/main/java/topics/model/DocumentValueObject.java
+/home/bgage/workspace/github/SpringBootTopicSearch/src/main/java/topics/configuration/ElasticsearchConfiguration.java
+/home/bgage/workspace/github/SpringBootTopicSearch/src/main/java/topics/dao/DocumentRepository.java
+/home/bgage/workspace/github/SpringBootTopicSearch/src/main/java/topics/util/DocumentListIterator.java

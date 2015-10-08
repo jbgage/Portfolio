@@ -1,0 +1,21 @@
+--- #DAO Yaml Configuration File
+
+
+---
+name: 'SectionDAO'
+comment: 'This is the DAO to manage access to the SECTION table and views'
+methods:    
+  - method-name: 'SelectAllSections'
+    return-type: 'List<SectionModel>'
+    input-variables:
+  - method-name: 'SelectSectionsByFormTypeId'
+    return-type: 'List<SectionModel>'
+    input-variables:
+      - variable-name: 'SectionTypeId'
+        data-type: 'int'
+  - method-name: 'SelectSectionBySectionId'
+    return-type: 'SectionModel'
+    input-variables:
+      - variable-name: 'SectionId'
+        data-type: 'int'
+...

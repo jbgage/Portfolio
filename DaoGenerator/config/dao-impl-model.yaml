@@ -1,0 +1,35 @@
+---
+name: 'SectionDAOImpl'
+dao-implemented: 'SectionDAO'
+comment: 'This DAOImpl performs CRUD operations on the view and table relevant to SECTIONs and implements the DAO: SectionDAO '
+methods:
+    - method-name: 'GetSectionsByTypeId'
+      comment: 'This method accesses the stored-procedure "sample.GetSectionsByTypeId" to retrieve values from the table "SECTION"'
+      return-type: 'list' #void , List , int, etc.
+      value-object-type: 'SectionModel'
+      method-input-variables:
+        - variable-name: 'SectionTypeId'
+          data-type: 'int'
+      stored-procedure-name: 'sample.SelectSectionsByTypeId'
+      sql-command-object-input-variables:
+        - command-object-input-field: '@TYPEID'
+          variable-name: 'FormTypeId'
+          db-type: 'SqlDbType.Int'
+          length: ''  
+      result-set-parameters:  
+        - database-object-field-name: 'SECTIONID'
+          result-set-return-type: 'int'
+          value-object-property: 'SectionId'
+        - database-object-field-name: 'SECTIONNAME'
+          result-set-return-type: 'String'
+          value-object-property: 'SectionName'
+        - database-object-field-name: 'SECTIONTYPEID'
+          result-set-return-type: 'int'
+          value-object-property: 'SectionTypeId'
+        - database-object-field-name: 'SECTIONTYPENAME'
+          result-set-return-type: 'String'
+          value-object-property: 'SectionTypeName'
+        - database-object-field-name: 'SECTIONTYPEDESCRIPTION'
+          result-set-return-type: 'String'
+          value-object-property: 'SectionTypeDescription'
+...
