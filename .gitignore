@@ -1,0 +1,11 @@
+/node_modules
+/dist
+/.tmp
+/.sass-cache
+/bower_components
+*.pyc
+/target/*.class
+.pydev
+.project
+.editorconfig
+.pydevproject

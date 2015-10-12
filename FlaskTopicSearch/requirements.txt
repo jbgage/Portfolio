@@ -1,0 +1,4 @@
+gensim==0.12.2
+elasticsearch==1.7.0
+flask==0.10.1
+flask-restful==0.2.1
