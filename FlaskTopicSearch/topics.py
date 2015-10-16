@@ -102,7 +102,7 @@ class TopicAnalyzer(object):
                 bow = self._get_bag_of_words_count_from_dictionary(corpus_dictionary, corpus)
                 ldaModel = models.LdaModel(bow , id2word=corpus_dictionary , num_topics=num_topics , alpha='auto' , eval_every=sample_ratio)
         except Exception , error:
-            self._logger.error("TopicAnalyzer.get_lda: Error occurred - {0}".form(str(error)))
+            self._logger.error("TopicAnalyzer.get_lda: Error occurred - {0}".format(str(error)))
         return self._json_transform(ldaModel , bow)
     
     
