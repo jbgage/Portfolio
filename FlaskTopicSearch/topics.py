@@ -50,8 +50,8 @@ class TopicAnalyzer(object):
     
     def _json_transform(self , model=None , bag_of_words=None):
         _json_array = []
-        if model is not None and transformed_corpus is not None:
-            for record in model[transformed_corpus]:
+        if model is not None and bag_of_words is not None:
+            for record in model[bag_of_words]:
                 for elem in record:
                     json_elem = {}
                     json_elem['id'] = elem[0]
