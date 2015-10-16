@@ -18,19 +18,20 @@ class Search(object):
             if self._property is not None:
                 elastic_search_url = self._property.elasticSearchUrl
                 index_name = self._property.elasticSearchIndexName
-                query = {
-                    "query": {
-                            "bool": {
-                                "must": [
-                                    {
-                                        "term": {
-                                            "document.text": term
-                                        }
+                query =  {
+                  "query": {
+                        "bool": {
+                            "must": [
+                               {
+                                    "query_string": {
+                                        "default_field": "document.text",
+                                        "query": term
                                     }
-                                ]
-                            }
+                                }
+                            ]
                         }
                     }
+                 }
                 self._logger.info('Query = {0}'.format(query))
                 es = Elasticsearch(hosts = elastic_search_url)
                 data = es.search(index=index_name , body=query)
