@@ -77,6 +77,6 @@ class LingoClustering(object):
                 label_score = phrase.index(max(phrase))
                 clusters.append((phrase_matrix.get_feature_names[i] , label_score))                         
         except Exception , error:
-            self._logger.error("LingoClustering.__term_frequency_extraction: Error occurred - {0}" , str(error))
+            self._logger.error("LingoClustering.cluster_label_induction: Error occurred - {0}" , str(error))
         return clusters  
         
