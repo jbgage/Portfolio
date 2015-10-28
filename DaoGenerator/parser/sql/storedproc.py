@@ -1,39 +1,39 @@
 #!/usr/bin/env python
-import yaml
+import json
 from model.StoredProcedureModel import StoredProcedureModel
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.YamlConstants import YamlConstants
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.constants import JsonConstants
 
-class StoredProcedureYamlParser:
+class StoredProcedureJsonParser:
     
-    def __init__(self , pathToYamlConfigFile , logger=None):
-        self._pathToYamlConfigFile = pathToYamlConfigFile
+    def __init__(self , pathToJsonConfigFile , logger=None):
+        self._pathToJsonConfigFile = pathToJsonConfigFile
         self.logger = logger
     def listOfStoredProcedures(self):
-        yaml_ingest = None
-        yaml_file = None
+        json_ingest = None
+        json_file = None
         sp_list = []
-        yaml_file_name = ''
-        config = ConfigYamlParser(self._pathToYamlConfigFile , self.logger)
+        json_file_name = ''
+        config = ConfigJsonParser(self._pathToJsonConfigFile , self.logger)
         try:
-            yaml_file_name = config.yamlModelFilePath(YamlConstants.YAMLSTOREDPROCEDURES)
-            yaml_file = open(yaml_file_name , 'rb')
-            yaml_ingest = yaml_file.read()
-            yaml_file.close()
-            if not yaml_ingest is None:
-                for yaml_parser in yaml.load_all(yaml_ingest):
+            json_file_name = config.jsonModelFilePath(JsonConstants.YAMLSTOREDPROCEDURES)
+            json_file = open(json_file_name , 'rb')
+            json_ingest = json_file.read()
+            json_file.close()
+            if not json_ingest is None:
+                for json_parser in json.load_all(json_ingest):
                     sp = StoredProcedureModel()
-                    sp.name = yaml_parser['name']
-                    sp.tableName = yaml_parser['table-name']
-                    sp.storedProcedureType = yaml_parser['stored-procedure-type']
-                    sp.viewName = yaml_parser['view-name']
-                    sp.inputVariables = yaml_parser['input-variables']
-                    sp.outputVariables = yaml_parser['output-variables']
-                    sp.selectStatementFields = yaml_parser['select-statement-fields']
-                    sp.insertStatementFields = yaml_parser['insert-statement-fields']
-                    sp.updateStatementFields = yaml_parser['update-statement-fields']
-                    sp.whereClause = yaml_parser['where-clause']
+                    sp.name = json_parser['name']
+                    sp.tableName = json_parser['table-name']
+                    sp.storedProcedureType = json_parser['stored-procedure-type']
+                    sp.viewName = json_parser['view-name']
+                    sp.inputVariables = json_parser['input-variables']
+                    sp.outputVariables = json_parser['output-variables']
+                    sp.selectStatementFields = json_parser['select-statement-fields']
+                    sp.insertStatementFields = json_parser['insert-statement-fields']
+                    sp.updateStatementFields = json_parser['update-statement-fields']
+                    sp.whereClause = json_parser['where-clause']
                     sp_list.append(sp)
         except IOError , ioerr:
-            self.logger.error( '****** StoredProcedureYamlParser.listOfStoredProcedures: IOError occurred - {0}'.format(str(ioerr)))
+            self.logger.error( '****** StoredProcedureJsonParser.listOfStoredProcedures: IOError occurred - {0}'.format(str(ioerr)))
         return sp_list

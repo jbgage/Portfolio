@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-class YamlConstants:
+class JsonConstants:
     
     #Yaml Model Config Parameters
-    YAMLCONFIG = 'config.yaml'
-    YAMLVALUEOBJECT = 'yaml.valueObject'
-    YAMLSCHEMA = 'yaml.schema'
-    YAMLVIEW = 'yaml.view'
-    YAMLSTOREDPROCEDURES = 'yaml.storedProcedures'
-    YAMLPROFILE = 'yaml.profile'
-    YAMLDAO = 'yaml.dao'
-    YAMLDAOIMPL = 'yaml.daoImpl'
-    YAMLDAOFACTORY = 'yaml.daoFactory'
+    JSONCONFIG = 'config.json'
+    JSONVALUEOBJECT = 'json.valueObject'
+    JSONSCHEMA = 'json.schema'
+    JSONVIEW = 'json.view'
+    JSONSTOREDPROCEDURES = 'json.storedProcedures'
+    JSONPROFILE = 'json.profile'
+    JSONDAO = 'json.dao'
+    JSONDAOIMPL = 'json.daoImpl'
+    JSONDAOFACTORY = 'json.daoFactory'
     
     #Object Deployment Directory Parameters
     DEPLOYMODEL = 'deploy.model'

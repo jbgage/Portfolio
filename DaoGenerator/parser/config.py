@@ -1,17 +1,17 @@
 #!/usr/bin/env python
-import yaml
+import json
 import os
-from parser.YamlConstants import YamlConstants
+from parser.constants import JsonConstants
 
-class ConfigYamlParser:
+class ConfigJsonParser:
     
     
     def __init__(self , absoluteConfigFilePath = '' , logger=None):
-        self._yamlConfigFilePath = absoluteConfigFilePath
+        self._jsonConfigFilePath = absoluteConfigFilePath
         self.logger = logger
         
     def configFilePath(self):
-        return self._yamlConfigFilePath
+        return self._jsonConfigFilePath
    
     def databaseName(self):
         database_name = ''
@@ -19,14 +19,14 @@ class ConfigYamlParser:
             configFile = open(self.configFilePath() , 'r')
             if not configFile is None:
                 config_file_ingest = configFile.read()
-                config_yaml = yaml.load(config_file_ingest)
-                database_name = config_yaml['databaseName']
+                config_json = json.load(config_file_ingest)
+                database_name = config_json['databaseName']
             configFile.flush()
             configFile.close()
         except IOError, ioerr:
-            self.logger.error( '***** ConfigYamlParser.databaseSchemaName: IOError occurred - {0}'.format(str(ioerr)))
+            self.logger.error( '***** ConfigJsonParser.databaseSchemaName: IOError occurred - {0}'.format(str(ioerr)))
         #except Exception , err:
-        #    print '***** ConfigYamlParser: Error occured - {0}'.format(str(err))
+        #    print '***** ConfigJsonParser: Error occured - {0}'.format(str(err))
         return database_name
    
     def databaseSchemaName(self):
@@ -35,14 +35,14 @@ class ConfigYamlParser:
             configFile = open(self.configFilePath() , 'r')
             if not configFile is None:
                 config_file_ingest = configFile.read()
-                config_yaml = yaml.load(config_file_ingest)
-                database_schema_name = config_yaml['databaseSchemaName']
+                config_json = json.load(config_file_ingest)
+                database_schema_name = config_json['databaseSchemaName']
             configFile.flush()
             configFile.close()
         except IOError, ioerr:
-            self.logger.error( '***** ConfigYamlParser.databaseSchemaName: IOError occurred - {0}'.format(str(ioerr)))
+            self.logger.error( '***** ConfigJsonParser.databaseSchemaName: IOError occurred - {0}'.format(str(ioerr)))
         #except Exception , err:
-        #    print '***** ConfigYamlParser: Error occured - {0}'.format(str(err))
+        #    print '***** ConfigJsonParser: Error occured - {0}'.format(str(err))
         return database_schema_name
     
     
@@ -52,51 +52,51 @@ class ConfigYamlParser:
             configFile = open(self.configFilePath() , 'r')
             if not configFile is None:
                 config_file_ingest = configFile.read()
-                config_yaml = yaml.load(config_file_ingest)
-                global_class_namespace = config_yaml['globalClassNameSpace']
+                config_json = json.load(config_file_ingest)
+                global_class_namespace = config_json['globalClassNameSpace']
             configFile.flush()
             configFile.close()
         except IOError, ioerr:
-            self.logger.error( '***** ConfigYamlParser.globalClassNameSpace: IOError occurred - {0}'.format(str(ioerr)))
+            self.logger.error( '***** ConfigJsonParser.globalClassNameSpace: IOError occurred - {0}'.format(str(ioerr)))
         #except Exception , err:
-        #    print '***** ConfigYamlParser: Error occured - {0}'.format(str(err))
+        #    print '***** ConfigJsonParser: Error occured - {0}'.format(str(err))
         
         return global_class_namespace
     
     
-    def yamlModelFilePath(self , modelName):
-        yaml_file_name = ''
-        yaml_directory = ''
+    def jsonModelFilePath(self , modelName):
+        json_file_name = ''
+        json_directory = ''
         try:
             if os.path.isfile(self.configFilePath()):
                 config_file_obj = open(self.configFilePath() , 'rb')
                 config_file_ingest = config_file_obj.read()
-                yaml_object = yaml.load(config_file_ingest)
+                json_object = json.load(config_file_ingest)
                 config_file_obj.flush()
                 config_file_obj.close()
-                yaml_directory = self.deploymentDirectory(YamlConstants.YAMLCONFIG)
-                if not yaml_object is None:
-                    if modelName == YamlConstants.YAMLVALUEOBJECT:
-                        yaml_file_name = yaml_object['yamlModelFiles']['valueObject']
-                    elif modelName == YamlConstants.YAMLSCHEMA:
-                        yaml_file_name = yaml_object['yamlModelFiles']['database']['schema']
-                    elif modelName == YamlConstants.YAMLVIEW:
-                        yaml_file_name = yaml_object['yamlModelFiles']['database']['view']
-                    elif modelName == YamlConstants.YAMLSTOREDPROCEDURES:
-                        yaml_file_name = yaml_object['yamlModelFiles']['database']['storedProcedures']
-                    elif modelName == YamlConstants.YAMLPROFILE:
-                        yaml_file_name = yaml_object['yamlModelFiles']['profile']
-                    elif modelName == YamlConstants.YAMLDAO:
-                        yaml_file_name = yaml_object['yamlModelFiles']['persistence']['dao']
-                    elif modelName == YamlConstants.YAMLDAOIMPL:
-                        yaml_file_name = yaml_object['yamlModelFiles']['persistence']['daoImpl']
-                    elif modelName == YamlConstants.YAMLDAOFACTORY:
-                        yaml_file_name = yaml_object['yamlModelFiles']['persistence']['daoFactory']
+                json_directory = self.deploymentDirectory(JsonConstants.YAMLCONFIG)
+                if not json_object is None:
+                    if modelName == JsonConstants.YAMLVALUEOBJECT:
+                        json_file_name = json_object['jsonModelFiles']['valueObject']
+                    elif modelName == JsonConstants.YAMLSCHEMA:
+                        json_file_name = json_object['jsonModelFiles']['database']['schema']
+                    elif modelName == JsonConstants.YAMLVIEW:
+                        json_file_name = json_object['jsonModelFiles']['database']['view']
+                    elif modelName == JsonConstants.YAMLSTOREDPROCEDURES:
+                        json_file_name = json_object['jsonModelFiles']['database']['storedProcedures']
+                    elif modelName == JsonConstants.YAMLPROFILE:
+                        json_file_name = json_object['jsonModelFiles']['profile']
+                    elif modelName == JsonConstants.YAMLDAO:
+                        json_file_name = json_object['jsonModelFiles']['persistence']['dao']
+                    elif modelName == JsonConstants.YAMLDAOIMPL:
+                        json_file_name = json_object['jsonModelFiles']['persistence']['daoImpl']
+                    elif modelName == JsonConstants.YAMLDAOFACTORY:
+                        json_file_name = json_object['jsonModelFiles']['persistence']['daoFactory']
         except IOError, ioerr:
-            self.logger.error( '***** ConfigYamlParser.yamlModelFilePath: IOError occurred - {0}'.format(str(ioerr)))
+            self.logger.error( '***** ConfigJsonParser.jsonModelFilePath: IOError occurred - {0}'.format(str(ioerr)))
         #except Exception , err:
-        #   print '***** ConfigYamlParser: Error occured - {0}'.format(str(err))
-        return yaml_directory + yaml_file_name
+        #   print '***** ConfigJsonParser: Error occured - {0}'.format(str(err))
+        return json_directory + json_file_name
     
    
     def deploymentDirectory(self , directory_name):
@@ -107,39 +107,39 @@ class ConfigYamlParser:
                 config_file_ingest = config_file_obj.read()
                 config_file_obj.flush()
                 config_file_obj.close()
-                yaml_object = yaml.load(config_file_ingest)
-                if not yaml_object is None:
-                    if directory_name ==  YamlConstants.DEPLOYMODEL:
-                        main_directory_name = yaml_object['directories']['main-deployment-dir']
-                        subDirectory = yaml_object['directories']['deploy']['model']
+                json_object = json.load(config_file_ingest)
+                if not json_object is None:
+                    if directory_name ==  JsonConstants.DEPLOYMODEL:
+                        main_directory_name = json_object['directories']['main-deployment-dir']
+                        subDirectory = json_object['directories']['deploy']['model']
                         outputDirectory = main_directory_name + subDirectory
-                    elif directory_name == YamlConstants.DEPLOYPROFILE:
-                        main_directory_name = yaml_object['directories']['main-deployment-dir']
-                        subDirectory = yaml_object['directories']['deploy']['profile']
+                    elif directory_name == JsonConstants.DEPLOYPROFILE:
+                        main_directory_name = json_object['directories']['main-deployment-dir']
+                        subDirectory = json_object['directories']['deploy']['profile']
                         outputDirectory = main_directory_name + subDirectory
-                    elif directory_name == YamlConstants.DEPLOYDAO:
-                        main_directory_name = yaml_object['directories']['main-deployment-dir']
-                        daoDirectory = yaml_object['directories']['deploy']['persistence']['dao']
+                    elif directory_name == JsonConstants.DEPLOYDAO:
+                        main_directory_name = json_object['directories']['main-deployment-dir']
+                        daoDirectory = json_object['directories']['deploy']['persistence']['dao']
                         outputDirectory = main_directory_name +  daoDirectory
-                    elif directory_name == YamlConstants.DEPLOYDAOIMPL:
-                        main_directory_name = yaml_object['directories']['main-deployment-dir']
-                        daoImplDirectory = yaml_object['directories']['deploy']['persistence']['daoImpl']
+                    elif directory_name == JsonConstants.DEPLOYDAOIMPL:
+                        main_directory_name = json_object['directories']['main-deployment-dir']
+                        daoImplDirectory = json_object['directories']['deploy']['persistence']['daoImpl']
                         outputDirectory = main_directory_name + daoImplDirectory
-                    elif directory_name == YamlConstants.DEPLOYFACTORY:
-                        main_directory_name = yaml_object['directories']['main-deployment-dir']
-                        factoryDirectory = yaml_object['directories']['deploy']['persistence']['factory']
+                    elif directory_name == JsonConstants.DEPLOYFACTORY:
+                        main_directory_name = json_object['directories']['main-deployment-dir']
+                        factoryDirectory = json_object['directories']['deploy']['persistence']['factory']
                         outputDirectory = main_directory_name + factoryDirectory 
-                    elif directory_name == YamlConstants.DEPLOYSQL:
-                        main_directory_name = yaml_object['directories']['main-deployment-dir']
-                        subdirectory = yaml_object['directories']['deploy']['sql']
+                    elif directory_name == JsonConstants.DEPLOYSQL:
+                        main_directory_name = json_object['directories']['main-deployment-dir']
+                        subdirectory = json_object['directories']['deploy']['sql']
                         outputDirectory = main_directory_name + subdirectory
-                    elif directory_name == YamlConstants.YAMLCONFIG:
-                        main_directory_name = yaml_object['directories']['config']
+                    elif directory_name == JsonConstants.YAMLCONFIG:
+                        main_directory_name = json_object['directories']['config']
                         outputDirectory = main_directory_name
         except IOError, ioerr:
-            self.logger.error( '***** ConfigYamlParser.deploymentDirectory: IOError occurred - {0}'.format(str(ioerr)))
+            self.logger.error( '***** ConfigJsonParser.deploymentDirectory: IOError occurred - {0}'.format(str(ioerr)))
         #except Exception , err:
-        #    print '***** ConfigYamlParser: Error occured - {0}'.format(str(err))
+        #    print '***** ConfigJsonParser: Error occured - {0}'.format(str(err))
         return outputDirectory
                 
 
