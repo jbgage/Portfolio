@@ -1,17 +1,6 @@
 
 class DaoModel(object):
-    
-    """
-    name:
-    comment:
-    methods:
-        - method-name:
-          return-type:
-          input-variables:
-            - variable-name:
-              data-type:
-    
-    """
+   
 
     def __init__(self , name = '' , comment = '' , method_list = []):
         self._name = name

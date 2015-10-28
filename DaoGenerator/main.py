@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from parser.ConfigYamlParser import ConfigYamlParser
+from parser.ConfigJsonParser import ConfigJsonParser
 from generator.springmvc.ValueObjectClassGenerator import ValueObjectClassGenerator
 from generator.springmvc.DaoClassGenerator import DaoClassGenerator
 from generator.springmvc.DaoImplClassGenerator import DaoImplClassGenerator
@@ -13,7 +13,7 @@ import logging
 from logging.config import fileConfig
 from optparse import OptionParser
 def main(args):
-    config = ConfigYamlParser('../config/config.yaml')
+    config = ConfigJsonParser('../config/config.json')
     fileConfig('../config/logging.cfg')
     logger = logging.getLogger(__name__)
     parser = OptionParser()
