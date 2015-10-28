@@ -5,9 +5,9 @@ Created on Oct 23, 2012
 '''
 from model.DaoModel import DaoModel
 from model.DaoMethodModel import DaoMethodModel
-from parser.YamlConstants import YamlConstants
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.pattern.DaoObjectYamlParser import DaoObjectYamlParser
+from parser.constants import JsonConstants
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.pattern.DaoObjectJsonParser import DaoObjectJsonParser
 import logging
 class DaoClassGenerator(object):
    
@@ -78,11 +78,11 @@ class DaoClassGenerator(object):
         return assembled_components
     
     def generateInterfaceFiles(self):
-        config = ConfigYamlParser(self._configFilePath, self.logger)
-        parser = DaoObjectYamlParser(config.configFilePath(), self.logger)
+        config = ConfigJsonParser(self._configFilePath, self.logger)
+        parser = DaoObjectJsonParser(config.configFilePath(), self.logger)
         daoList = parser.listOfDaos()
         for element in daoList:
-            directory = config.deploymentDirectory(YamlConstants.DEPLOYDAO)
+            directory = config.deploymentDirectory(JsonConstants.DEPLOYDAO)
             fileName = element.name + '.java'
             dao_file_obj = open(directory + fileName , 'w+')
             dao_file_obj.flush()

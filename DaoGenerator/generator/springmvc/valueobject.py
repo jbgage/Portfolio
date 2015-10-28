@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.pattern.ValueObjectYamlParser import ValueObjectYamlParser
-from parser.YamlConstants import YamlConstants
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.pattern.ValueObjectJsonParser import ValueObjectJsonParser
+from parser.constants import JsonConstants
 import os
 import sys
 
@@ -17,7 +17,7 @@ class ValueObjectClassGenerator:
     
     def _package_block(self):
         ls = '\r\n'
-        config = ConfigYamlParser(self._pathToConfigFile)
+        config = ConfigJsonParser(self._pathToConfigFile)
         namespace_block = 'package {0}.model {1}'.format(config.globalClassNameSpace() , ls)
         return namespace_block
     
@@ -79,11 +79,11 @@ class ValueObjectClassGenerator:
         return class_definition
     
     def generateClassFiles(self):
-        config = ConfigYamlParser(self._pathToConfigFile, self.logger)
-        voParser = ValueObjectYamlParser(config.configFilePath(), self.logger)
+        config = ConfigJsonParser(self._pathToConfigFile, self.logger)
+        voParser = ValueObjectJsonParser(config.configFilePath(), self.logger)
         vo_list = []
         try:
-            outputDirectory = config.deploymentDirectory(YamlConstants.DEPLOYMODEL)
+            outputDirectory = config.deploymentDirectory(JsonConstants.DEPLOYMODEL)
             vo_list = voParser.listOfValueObjects()
             if not (vo_list is None):
                 for element in vo_list:

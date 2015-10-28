@@ -1,6 +1,6 @@
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.pattern.DaoImplObjectYamlParser import DaoImplObjectYamlParser
-from parser.YamlConstants import YamlConstants
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.pattern.DaoImplObjectJsonParser import DaoImplObjectJsonParser
+from parser.constants import JsonConstants
 
 class DaoImplClassGenerator:
     def __init__(self , configFilePath = '' , logger=None):
@@ -182,11 +182,11 @@ class DaoImplClassGenerator:
     
     
     def generateClassFiles(self):
-        config = ConfigYamlParser(self._configFilePath, self.logger)
-        daoImplParser = DaoImplObjectYamlParser(config.configFilePath(), self.logger)
+        config = ConfigJsonParser(self._configFilePath, self.logger)
+        daoImplParser = DaoImplObjectJsonParser(config.configFilePath(), self.logger)
         daoImplList = daoImplParser.listOfDaoImpls()
         for element in daoImplList:
-            output_dir = config.deploymentDirectory(YamlConstants.DEPLOYDAOIMPL)
+            output_dir = config.deploymentDirectory(JsonConstants.DEPLOYDAOIMPL)
             fileName = element.name + '.java'
             daoImplFile = open(output_dir + fileName , 'w+')
             daoImplFile.flush()

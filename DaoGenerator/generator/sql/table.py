@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.sql.SchemaYamlParser import SchemaYamlParser
-from parser.YamlConstants import YamlConstants
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.sql.SchemaJsonParser import SchemaJsonParser
+from parser.constants import JsonConstants
 
 class SqlTableScriptGenerator:
     
@@ -69,8 +69,8 @@ class SqlTableScriptGenerator:
     
     
     def createSqlStatement(self):
-        config = ConfigYamlParser(self._pathToConfigFile);
-        table_parser = SchemaYamlParser(config.configFilePath())
+        config = ConfigJsonParser(self._pathToConfigFile);
+        table_parser = SchemaJsonParser(config.configFilePath())
         table_list = []
         ls = '\r\n'
         tab_char = '\t'
@@ -88,12 +88,12 @@ class SqlTableScriptGenerator:
         return sql_output
     
     def createSqlFile(self):
-        config = ConfigYamlParser(self._pathToConfigFile, self.logger)
+        config = ConfigJsonParser(self._pathToConfigFile, self.logger)
         sql_deployment_directory = ''
         sql_file_name = ''
         try:
             if (not (config is None)):
-                sql_deployment_directory = config.deploymentDirectory(YamlConstants.DEPLOYSQL)
+                sql_deployment_directory = config.deploymentDirectory(JsonConstants.DEPLOYSQL)
                 sql_file_name = '{0}{1}.sql'.format(sql_deployment_directory , self.__sql_file_name)
                 sql_file_obj = open(sql_file_name , 'w+')
                 if (not(sql_file_obj is None)):

@@ -3,9 +3,9 @@ Created on Oct 27, 2012
 
 @author: bgage
 '''
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.YamlConstants import YamlConstants
-from parser.sql.SchemaYamlParser import SchemaYamlParser
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.constants import JsonConstants
+from parser.sql.SchemaJsonParser import SchemaJsonParser
 class DeleteDataScriptGenerator(object):
     '''
     classdocs
@@ -46,12 +46,12 @@ class DeleteDataScriptGenerator(object):
         return sql_output
     
     def generateSqlScript(self):
-        config = ConfigYamlParser(self._configFilePath)
+        config = ConfigJsonParser(self._configFilePath)
         sql_file_name = 'DeleteAllDataFromTables.sql'
         table_list = []
-        tableParser = SchemaYamlParser(config.configFilePath(), self.logger)
+        tableParser = SchemaJsonParser(config.configFilePath(), self.logger)
         try:
-            sql_directory = config.deploymentDirectory(YamlConstants.DEPLOYSQL)
+            sql_directory = config.deploymentDirectory(JsonConstants.DEPLOYSQL)
             sql_file = open(sql_directory + sql_file_name , 'w+')
             table_list = tableParser.listOfTables()
             sql_file.write(self.assemble_components(config.databaseName(), config.databaseSchemaName(), table_list))

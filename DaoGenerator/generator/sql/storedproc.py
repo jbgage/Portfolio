@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.YamlConstants import YamlConstants
-from parser.sql.StoredProcedureYamlParser import StoredProcedureYamlParser
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.constants import JsonConstants
+from parser.sql.StoredProcedureJsonParser import StoredProcedureJsonParser
 class SqlStoredProcedureGenerator:
     
     def __init__(self , pathToConfigFile , logger=None):
@@ -232,11 +232,11 @@ class SqlStoredProcedureGenerator:
         return sql_output
     
     def createSqlStatement(self):
-        config = ConfigYamlParser(self._pathToConfigFile)
+        config = ConfigJsonParser(self._pathToConfigFile)
         sp_list = []
         sql_output = ''
         try:
-            sp_parser = StoredProcedureYamlParser(config.configFilePath())
+            sp_parser = StoredProcedureJsonParser(config.configFilePath())
             if not sp_parser is None:
                 sp_list = sp_parser.listOfStoredProcedures()
                 if not sp_list is None and len(sp_list) > 0:
@@ -248,9 +248,9 @@ class SqlStoredProcedureGenerator:
         return sql_output
     
     def createSqlFile(self):
-        config = ConfigYamlParser(self._pathToConfigFile, self.logger)
+        config = ConfigJsonParser(self._pathToConfigFile, self.logger)
         try:
-            stored_procedure_file_directory = config.deploymentDirectory(YamlConstants.DEPLOYSQL)
+            stored_procedure_file_directory = config.deploymentDirectory(JsonConstants.DEPLOYSQL)
             stored_procedure_path = '{0}{1}.sql'.format(stored_procedure_file_directory , self.__sql_file_name)
             stored_procedure_file_obj = open(stored_procedure_path , 'w+')
             if not stored_procedure_file_obj is None:

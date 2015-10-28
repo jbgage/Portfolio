@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.YamlConstants import YamlConstants
-from parser.sql.ViewYamlParser import ViewYamlParser
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.constants import JsonConstants
+from parser.sql.ViewJsonParser import ViewJsonParser
 
 class SqlViewScriptGenerator:
     
@@ -126,15 +126,15 @@ class SqlViewScriptGenerator:
  
     
     def createSqlFile(self):
-        config = ConfigYamlParser(self._pathToConfigFile, self.logger)
-        viewParser = ViewYamlParser(config.configFilePath(), self.logger)
+        config = ConfigJsonParser(self._pathToConfigFile, self.logger)
+        viewParser = ViewJsonParser(config.configFilePath(), self.logger)
         sql_directory = ''
         sql_file_path = ''
         view_list = []
         try:
             view_list = viewParser.listOfViews()
             if not config is None:
-                sql_directory = config.deploymentDirectory(YamlConstants.DEPLOYSQL)
+                sql_directory = config.deploymentDirectory(JsonConstants.DEPLOYSQL)
                 sql_file_path = '{0}{1}.sql'.format(sql_directory , self.__sql_file_name)
                 sql_file_obj = open(sql_file_path , 'w+')
                 if (not (sql_file_obj is None)):

@@ -1,11 +1,11 @@
-import yaml
+import json
 from model.DaoImplModel import DaoImplModel
 from model.DaoImpMethodModel import DaoImplMethodModel
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.YamlConstants import YamlConstants
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.constants import JsonConstants
 
 
-class DaoImplObjectYamlParser:
+class DaoImplObjectJsonParser:
    
     def __init__(self , configFilePath = '' , logger=None):
         self.__configFilePath = configFilePath
@@ -13,23 +13,23 @@ class DaoImplObjectYamlParser:
     
     def listOfDaoImpls(self):
         daoImplList = []
-        yaml_file_name = ''
-        config = ConfigYamlParser(self.__configFilePath , self.logger)
+        json_file_name = ''
+        config = ConfigJsonParser(self.__configFilePath , self.logger)
         try:
             if not config is None:
-                yaml_file_name = config.yamlModelFilePath(YamlConstants.YAMLDAOIMPL)
-                yaml_file = open(yaml_file_name , 'rb')
-                yaml_file_ingest = yaml_file.read()
-                yaml_file.close()
-                for yaml_parser in yaml.load_all(yaml_file_ingest):
+                json_file_name = config.jsonModelFilePath(JsonConstants.YAMLDAOIMPL)
+                json_file = open(json_file_name , 'rb')
+                json_file_ingest = json_file.read()
+                json_file.close()
+                for json_parser in json.load_all(json_file_ingest):
                     daoImplModel = DaoImplModel()
-                    daoImplModel.name = yaml_parser['name']
-                    daoImplModel.daoImplemented = yaml_parser['dao-implemented']
-                    daoImplModel.comment = yaml_parser['comment']
-                    daoImplModel.methodList = self.listOfDaoImplMethods(yaml_parser['methods'])
+                    daoImplModel.name = json_parser['name']
+                    daoImplModel.daoImplemented = json_parser['dao-implemented']
+                    daoImplModel.comment = json_parser['comment']
+                    daoImplModel.methodList = self.listOfDaoImplMethods(json_parser['methods'])
                     daoImplList.append(daoImplModel)
         except Exception , error:
-            self.logger.error( '********** DaoImplObjectYamlParser.listOfDaoImpls: Error occurred - {0}'.format(str(error)))
+            self.logger.error( '********** DaoImplObjectJsonParser.listOfDaoImpls: Error occurred - {0}'.format(str(error)))
         return daoImplList
         
     def listOfDaoImplMethods(self , methodList):
@@ -48,6 +48,6 @@ class DaoImplObjectYamlParser:
                     implMethod.resultSetParameters = element['result-set-parameters']
                     listOfDaoMethods.append(implMethod)
         except Exception , error:
-            self.logger.error( '********** DaoImplObjectYamlParser.listOfDaoImplMethods: Error occurred - {0}'.format(str(error)))
+            self.logger.error( '********** DaoImplObjectJsonParser.listOfDaoImplMethods: Error occurred - {0}'.format(str(error)))
         return listOfDaoMethods
         

@@ -3,9 +3,9 @@ Created on Oct 24, 2012
 
 @author: bgage
 '''
-from parser.YamlConstants import YamlConstants
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.sql.SchemaYamlParser import SchemaYamlParser
+from parser.constants import JsonConstants
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.sql.SchemaJsonParser import SchemaJsonParser
 class AlterTableScriptGenerator(object):
     
     def __init__(self , pathToConfigFile , logger=None):
@@ -61,12 +61,12 @@ class AlterTableScriptGenerator(object):
         return assembled_components
     
     def generateAlterTableScript(self):
-        config = ConfigYamlParser(self._pathToConfigFile , self.logger)
-        tableParser = SchemaYamlParser(config.configFilePath() , self.logger)
+        config = ConfigJsonParser(self._pathToConfigFile , self.logger)
+        tableParser = SchemaJsonParser(config.configFilePath() , self.logger)
         alterGen = AlterTableScriptGenerator(config.configFilePath() , self.logger)
         tableList = []
         tableList = tableParser.listOfTables()
-        file_directory = config.deploymentDirectory(YamlConstants.DEPLOYSQL)
+        file_directory = config.deploymentDirectory(JsonConstants.DEPLOYSQL)
         file_name = self.__sql_file_name + '.sql'
         alter_file_obj = open(file_directory + file_name , 'w+')
         alter_file_obj.write(self.__use_database_block(config.databaseName()))

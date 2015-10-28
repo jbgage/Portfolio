@@ -3,10 +3,10 @@ Created on Oct 26, 2012
 
 @author: bgage
 '''
-from parser.ConfigYamlParser import ConfigYamlParser
-from parser.YamlConstants import YamlConstants
-from parser.sql.ViewYamlParser import ViewYamlParser
-from parser.sql.SchemaYamlParser import SchemaYamlParser
+from parser.ConfigJsonParser import ConfigJsonParser
+from parser.constants import JsonConstants
+from parser.sql.ViewJsonParser import ViewJsonParser
+from parser.sql.SchemaJsonParser import SchemaJsonParser
 class DropTableViewGenerator(object):
     '''
     classdocs
@@ -105,15 +105,15 @@ class DropTableViewGenerator(object):
         return sql_output
     
     def generateSqlScript(self):
-        config = ConfigYamlParser(self.__configFilePath, self.logger)
-        viewParser = ViewYamlParser(config.configFilePath(), self.logger)
-        tableParser = SchemaYamlParser(config.configFilePath(), self.logger)
+        config = ConfigJsonParser(self.__configFilePath, self.logger)
+        viewParser = ViewJsonParser(config.configFilePath(), self.logger)
+        tableParser = SchemaJsonParser(config.configFilePath(), self.logger)
         view_list = []
         table_list = []
         database_name = ''
         schema_name = ''
         sql_file_name = '6-DropTablesAndViews.sql'
-        sql_file_directory = config.deploymentDirectory(YamlConstants.DEPLOYSQL)
+        sql_file_directory = config.deploymentDirectory(JsonConstants.DEPLOYSQL)
         try:
             view_list = viewParser.listOfViews()
             table_list = tableParser.listOfTables() 
