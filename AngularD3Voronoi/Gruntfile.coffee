@@ -1,9 +1,6 @@
 module.exports = (grunt) ->
-
   # configuration
   grunt.initConfig
-
-    
    
     coffee:
       compile:
@@ -15,8 +12,6 @@ module.exports = (grunt) ->
         options:
           bare: true
           preserve_dirs: true
-
-   
 
   # load plugins
   grunt.loadNpmTasks 'grunt-contrib-coffee'

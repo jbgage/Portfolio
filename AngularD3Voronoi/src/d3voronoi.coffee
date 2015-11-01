@@ -1,52 +1,39 @@
 @angular.module('AngularD3Voronoi' , [])
 .directive('voronoi' ,  () ->
+	if d3?
 		restrict: 'EA',
 		scope:{
-			data: '=',
-			width: '=',
-			height: '='
+			vertices: '@'
 		},
-		link: (scope , element) ->
-			
-				margin = {top:20,right:20,bottom:20,left:40}
-				width = scope.width - margin.left - margin.right
-				height = scope.height - margin.top - margin.bottom
-				voronoi = d3.geom.voronoi()
-					.clipExtent([[0, 0], [width, height]]);
-				svg = d3.select(element[0])
-					.append('svg')
-					.attr('width' , width )
-					.attr('height' , height)
-				path = svg.append("g").selectAll("path")
+		link: (scope , element , attr) ->
+			margin = {top:20,right:20,bottom:20,left:40}
+			width = attr.width - margin.left - margin.right
+			height = attr.height - margin.top - margin.bottom
+			scope.render = (data) ->
+					results = eval(data)
+					voronoi = d3.geom.voronoi().clipExtent([[0 , 0] , [width , height]])
+					svg = d3.select(element[0])
+							.append('svg')
+							.attr('width' , width)
+							.attr('height' , height)
+					path = svg.append('g')
+							  .selectAll('path')
+					colors = d3.scale.category20c()
+					if results.length > 0 
+						svg.selectAll('path')
+						   .data(voronoi(results))
+						   .enter()
+						   .append('path')
+						   .style('fill' , (d , i) ->
+						   		return colors(i)
+						   )
+						   .attr('d' , (d) ->
+						   		return 'M' + d.join('L') + 'Z'
+						   )
+			scope.$watch('vertices' , (data) ->
+					scope.render(data)
+			, true)	
+	else
+		throw new Error('This directive requires d3.js. Please include this file in your script references.')
 				
-				scope.render = (data) ->
-					polygon = (d) ->
-						"M" + d.join("L") + "Z"
-					
-					redraw = ->
-						path = path.data(voronoi(scope.data) , polygon)
-						path.exit().remove()
-						path.enter().append("path")
-							.attr("d" , polygon)
-						path.order()
-						return
-					svg.selectAll('circle')
-						.data(scope.data.slice(1))
-						.enter()
-						.append('circle')
-						.attr('transform' , (d) ->
-							"translate(" + d + ")"
-						)
-						.attr('r' , 1.5)
-					redraw()
-					return
-					
-					
-				scope.$watch('data' , () ->
-					scope.render(scope.data)
-					return
-				, true)	
-				return
-			
-			
 )
