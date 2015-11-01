@@ -4,7 +4,7 @@
 		    "comment": "This is the DAO to manage access to the SECTION table and views", 
 		    "methods": [
 		        {
-		            "input-variables": null, 
+		            "input-variables": [], 
 		            "method-name": "SelectAllSections", 
 		            "return-type": "List<SectionModel>"
 		        }, 

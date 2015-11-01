@@ -1,50 +1,40 @@
-'''
-Created on Oct 23, 2012
-
-@author: bgage
-'''
-from model.DaoModel import DaoModel
-from model.DaoMethodModel import DaoMethodModel
-from parser.constants import JsonConstants
-from parser.ConfigJsonParser import ConfigJsonParser
-from parser.pattern.DaoObjectJsonParser import DaoObjectJsonParser
-import logging
+import os
+from model.dao import DaoModel
+from model.daomethod import DaoMethodModel
+from parser.constant import JsonConstants
+from parser.config import ConfigJsonParser
+from parser.pattern.dao import DaoObjectJsonParser
 class DaoClassGenerator(object):
-   
-    def __init__(self , configFilePath = '' , logger=None):
-        self._configFilePath = configFilePath
-        self.logger = logger
-    
-    def _import_block(self , global_namespace):
-        ls = '\r\n'
+    def __init__(self , configFileObj = None , deploymentUtil=None , logger=None):
+        self.__configFileObj = configFileObj
+        self.__deploymentUtil = deploymentUtil
+        self.__logger = logger
+    def __import_block(self , global_namespace , tab_char=''):
+        ls = os.linesep
         import_block = ''
-        import_block += 'import java.util.List;' + ls
-        import_block += 'import {0}.model;{1}'.format(global_namespace , ls)
+        import_block += tab_char + 'import java.util.List;' + ls
+        import_block += tab_char + 'import {0}.model;'.format(global_namespace) + ls
         return import_block
-    
-    def _package_declaration(self , global_namespace):
-        ls = '\r\n'
+    def __package_declaration(self , global_namespace):
+        ls = os.linesep
         namespace_block = ''
-        namespace_block += 'package {0}.persistence.dao{1}'.format(global_namespace , ls)
+        namespace_block += 'package {0}.persistence.dao;'.format(global_namespace ) + ls
         return namespace_block
-    
-    def _interface_definition_block(self , class_name , tab_char):
-        ls = '\r\n'
-        interface_declaration = '{0}public interface {1}  {2}'.format(tab_char , class_name , ls)
+    def __interface_definition_block(self , class_name , tab_char):
+        ls = os.linesep
+        interface_declaration = '{0}public interface {1} {2}'.format(tab_char , class_name , '{' ) + ls
         return interface_declaration
-    
-    def _interface_comment_block(self , class_comment , tab_char):
+    def __interface_comment_block(self , class_comment , tab_char):
         class_comment_output = ''
-        ls = '\r\n'
+        ls = os.linesep
         if not class_comment is None and class_comment != '':
             class_comment_output += tab_char + '/' + ('*' * (len(class_comment) + 1)) + ls
-            class_comment_output += tab_char + '-  {0}{1}'.format(class_comment , ls)
+            class_comment_output += tab_char + '-  {0}'.format(class_comment ) + ls
             class_comment_output += tab_char + ('*' * (len(class_comment) + 1)) + '/' + ls
         return class_comment_output
-       
-    def _method_declaration(self , method_name , return_type ,  method_input_variables , tab_char):
+    def __method_declaration(self , method_name , return_type ,  method_input_variables , tab_char):
         method_declaration = ''
-        ls = '\r\n'
+        ls = os.linesep
         input_variable_list = ''
         try:
             for index , element in enumerate(method_input_variables):
@@ -59,33 +49,32 @@ class DaoClassGenerator(object):
                     input_variable_list += ','
                 method_declaration = '{0} {1} {2} ( {3} ) ;{4}'.format(tab_char , return_type , method_name , input_variable_list , ls)
         except Exception , error:
-            self.logger.error( '*********** DaoClassGenerator._method_declaration: Error occurred - {0}'.format(str(error)))
+            self.__logger.error( '*********** DaoClassGenerator._method_declaration: Error occurred - {0}'.format(str(error)))
         return method_declaration
-    
     def assemble_components(self , global_namespace , className , comment , method_list):
         assembled_components = ''
-        ls = '\r\n'
+        ls = os.linesep
         tab_char = '\t'
-        assembled_components += self._import_block(global_namespace) + ls
-        assembled_components += self._package_declaration(global_namespace)
-        assembled_components += '{'+ ls
-        assembled_components += self._interface_comment_block(comment , tab_char) + ls
-        assembled_components += self._interface_definition_block(className , tab_char) + '{' + ls
+        assembled_components += self.__package_declaration(global_namespace)
+        assembled_components += self.__import_block(global_namespace , tab_char='') + ls
+        assembled_components += self.__interface_comment_block(comment , tab_char) + ls
+        assembled_components += self.__interface_definition_block(className , tab_char='')
         for element in method_list:
-            assembled_components += self._method_declaration(element.methodName , element.returnType , element.inputVariables , (tab_char * 2))
-        assembled_components += tab_char + '}' + ls
+            assembled_components += self.__method_declaration(element.methodName , element.returnType , element.inputVariables , (tab_char * 2))
         assembled_components += '}' + ls
         return assembled_components
-    
     def generateInterfaceFiles(self):
-        config = ConfigJsonParser(self._configFilePath, self.logger)
-        parser = DaoObjectJsonParser(config.configFilePath(), self.logger)
-        daoList = parser.listOfDaos()
-        for element in daoList:
-            directory = config.deploymentDirectory(JsonConstants.DEPLOYDAO)
-            fileName = element.name + '.java'
-            dao_file_obj = open(directory + fileName , 'w+')
-            dao_file_obj.flush()
-            dao_file_obj.write(self.assemble_components(config.globalClassNameSpace(), element.name, element.comment, element.methodList))
-            dao_file_obj.close()
-    
+        try:
+            parser = DaoObjectJsonParser(self.__configFileObj ,  self.__logger)
+            if parser is not None:
+                daoList = parser.listOfDaos()
+                for element in daoList:
+                    directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYDAO)
+                    self.__deploymentUtil.createDeploymentDirectory(directory)
+                    fileName = element.name + '.java'
+                    with open(directory + fileName , 'w+') as dao_file_obj:
+                         dao_file_obj.write(self.assemble_components(self.__configFileObj.globalClassNameSpace(), element.name, element.comment, element.methodList))
+            else:
+                self.__logger.error("DaoClassGenerator.generateInterfaceFiles: error retrieving configuration file object.")
+        except Exception , error:
+            self.__logger.error( '*********** DaoClassGenerator.generateInterfaceFiles: Error occurred - {0}'.format(str(error)))

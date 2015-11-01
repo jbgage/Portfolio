@@ -1,18 +1,9 @@
-'''
-Created on Sep 27, 2015
-
-@author: bgage
-'''
 import jsonutil
 import os
 class ConfigurationUtil(object):
-    
     def __init__(self, configurationFilePath='' , logger=None):
         self._configFilePath = configurationFilePath
         self.logger = logger
-    
-    
-     
     def createConfigurationObject(self):
         configObj = {}
         jsonConfig = {}
@@ -37,7 +28,6 @@ class ConfigurationUtil(object):
                         configObj['persistence']['dao-impl'] = jsonUtil.retrieveJsonObjectFromJsonConfigPath( configDir +  configObj['models']['persistence']['daoImpl'])
                         configObj['persistence']['dao-factory'] = jsonUtil.retrieveJsonObjectFromJsonConfigPath( configDir +  configObj['models']['persistence']['daoFactory'])
                         configObj['value-object'] = jsonUtil.retrieveJsonObjectFromJsonConfigPath(configDir +  configObj['models']['valueObject'])
-                
         except IOError , ioerror:
             self.logger.error("ConfigurationUtil.createConfigurationObject: IOException occurred - {0}".format(str(ioerror)))
         except Exception , error:

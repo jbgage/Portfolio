@@ -1,40 +1,32 @@
-'''
-Created on Oct 27, 2012
-
-@author: bgage
-'''
-from parser.ConfigJsonParser import ConfigJsonParser
-from parser.constants import JsonConstants
-from parser.sql.SchemaJsonParser import SchemaJsonParser
+import os
+from parser.config import ConfigJsonParser
+from parser.constant import JsonConstants
+from parser.sql.schema import SchemaJsonParser
 class DeleteDataScriptGenerator(object):
-    '''
-    classdocs
-    '''
-    def __init__(self , configFilePath = '' , logger=None):
-        self._configFilePath = configFilePath
-        self.logger = logger
+    def __init__(self , configFileObj = None , deploymentUtil=None , logger=None):
+        self.__configFileObj = configFileObj
+        self.__deploymentUtil = deploymentUtil
+        self.__logger = logger
     def __using_database_block(self , database_name):
         sql_output = ''
-        ls = '\r\n'
+        ls = os.linesep
         try:
             sql_output = 'USE {0};{1}'.format(database_name , ls)
             sql_output += 'GO' + ls 
             sql_output += ls
         except Exception , err:
-            self.logger.error( '******** DeleteDataScriptGenerator.__using_block: Exception occurred - Message = {0}'.format(str(err)))
+            self.__logger.error( '******** DeleteDataScriptGenerator.__using_block: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
-    
     def __generate_delete_statement(self , schema_name , table_name):
         sql_output = ''
-        ls = '\r\n'
+        ls = os.linesep
         try:
             sql_output += 'DELETE FROM {0}.{1};{2}'.format(schema_name , table_name , ls) 
             sql_output += 'GO' + ls
             sql_output += ls
         except Exception , err:
-            self.logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
+            self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
-    
     def assemble_components(self , database_name , schema_name , table_list):
         sql_output = ''
         try:
@@ -42,22 +34,17 @@ class DeleteDataScriptGenerator(object):
             for element in table_list:
                 sql_output += self.__generate_delete_statement(schema_name, element.tableName)
         except Exception , err:
-            self.logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
+            self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
-    
     def generateSqlScript(self):
-        config = ConfigJsonParser(self._configFilePath)
         sql_file_name = 'DeleteAllDataFromTables.sql'
         table_list = []
-        tableParser = SchemaJsonParser(config.configFilePath(), self.logger)
+        tableParser = SchemaJsonParser(self.__configFileObj, self.__logger)
         try:
-            sql_directory = config.deploymentDirectory(JsonConstants.DEPLOYSQL)
-            sql_file = open(sql_directory + sql_file_name , 'w+')
-            table_list = tableParser.listOfTables()
-            sql_file.write(self.assemble_components(config.databaseName(), config.databaseSchemaName(), table_list))
-            sql_file.close()
+            sql_directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYSQL)
+            self.__deploymentUtil.createDeploymentDirectory(sql_directory)
+            with open(sql_directory + sql_file_name , 'w+') as sql_file:
+                table_list = tableParser.listOfTables()
+                sql_file.write(self.assemble_components(self.__configFileObj.databaseName(), self.__configFileObj.databaseSchemaName(), table_list))
         except Exception , err:
-            self.logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
-        
-        
-        
+            self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))

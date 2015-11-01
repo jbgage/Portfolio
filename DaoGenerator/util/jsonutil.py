@@ -1,34 +1,26 @@
-'''
-Created on Sep 26, 2015
-
-@author: bgage
-'''
 import os
 import json
 class JsonUtil(object):
     def __init__(self, inputFile='' , logger = None):
-        self._inputFile = inputFile
-        self.logger = logger
-        
+        self.__inputFile = inputFile
+        self.__logger = logger
     def retrieveElementFromJsonConfig(self , elementName):
         parameter = ''
         json_data = self.retrieveJsonObjectFromJsonConfig()
         if json_data is not None:
             parameter = json_data[elementName]
         return parameter
-
     def retrieveJsonObjectFromJsonConfig(self):
         jsonObject = None
         try:
-            if self._inputFile is not None and self._inputFile != '':
-                absoluteFilePath = os.path.abspath(self._inputFile)
+            if self.__inputFile is not None and self.__inputFile != '':
+                absoluteFilePath = os.path.abspath(self.__inputFile)
                 if os.path.isfile(absoluteFilePath):
                     with open(absoluteFilePath , 'r') as jsonFile:
                         jsonObject = json.load(jsonFile)
         except Exception , error:
-            self.logger.error("Error occurred - {0}".format(str(error)))
+            self.__logger.error("Error occurred - {0}".format(str(error)))
         return jsonObject
-    
     def retrieveJsonObjectFromJsonConfigPath(self , inputFilePath=''):
         jsonObject = None
         try:
@@ -38,5 +30,5 @@ class JsonUtil(object):
                     with open(absoluteFilePath , 'r') as jsonFile:
                         jsonObject = json.load(jsonFile)
         except Exception , error:
-            self.logger.error("Error occurred - {0}".format(str(error)))
+            self.__logger.error("Error occurred - {0}".format(str(error)))
         return jsonObject
