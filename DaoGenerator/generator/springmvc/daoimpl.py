@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 from parser.config import ConfigJsonParser
 from parser.pattern.daoimpl import DaoImplObjectJsonParser

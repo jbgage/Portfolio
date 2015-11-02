@@ -1,17 +1,10 @@
-'''
-Created on Oct 12, 2015
-
-@author: jbgage
-'''
-from elasticsearch import Elasticsearch
+#!/usr/bin/env python
 import json
-
+from elasticsearch import Elasticsearch
 class Search(object):
-    
     def __init__(self,  propertyObj=None , logger=None):
         self._property = propertyObj
         self._logger = logger
-    
     def get(self , term=''):
         documents = []
         try:
@@ -43,7 +36,3 @@ class Search(object):
         except Exception , error:
             self._logger.error('Search.get: Error occurred - {0}'.format(str(error)))
         return documents
-        
-        
-        
-        

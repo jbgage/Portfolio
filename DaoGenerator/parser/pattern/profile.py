@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from model.profile import ProfileModel
 from model.profilemethod import ProfileMethodModel
 from parser.config import ConfigJsonParser

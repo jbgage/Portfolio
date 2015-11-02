@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 class JsonConstants:
-    
-    #Yaml Model Config Parameters
+    #JSON Model Config Parameters
     JSONCONFIG = 'config.json'
     JSONVALUEOBJECT = 'json.valueObject'
     JSONSCHEMA = 'json.schema'
@@ -11,7 +10,6 @@ class JsonConstants:
     JSONDAO = 'json.dao'
     JSONDAOIMPL = 'json.daoImpl'
     JSONDAOFACTORY = 'json.daoFactory'
-    
     #Object Deployment Directory Parameters
     DEPLOYMODEL = 'deploy.model'
     DEPLOYPROFILE = 'deploy.profile'
@@ -19,6 +17,3 @@ class JsonConstants:
     DEPLOYDAOIMPL = 'deploy.daoImpl'
     DEPLOYFACTORY = 'deploy.factory'
     DEPLOYSQL = 'deploy.sql'
-    
-    
-    

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import jsonutil
 import os
 class ConfigurationUtil(object):

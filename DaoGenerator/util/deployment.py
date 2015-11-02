@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 class DeploymentUtil(object):
     def __init__(self ,  logger=None):

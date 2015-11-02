@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 from model.dao import DaoModel
 from model.daomethod import DaoMethodModel

@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-import os
-import json
 from model.table import TableModel
 from model.tablefield import TableFieldModel
 from parser.config import ConfigJsonParser
@@ -22,7 +20,6 @@ class SchemaJsonParser:
         except Exception, err:
             self.__logger.error( '***** SchemaJsonParser.listOfTables: Error occured - {0}'.format(str(err)))
         return table_model_list
-    
     def listOfTableField(self , method_list):
         tableMethodList = []
         for element in method_list:
@@ -37,8 +34,3 @@ class SchemaJsonParser:
             field.foreignKeyTable = element['foreign-key-table']
             tableMethodList.append(field)
         return tableMethodList
-    
-    
-    
-    
-

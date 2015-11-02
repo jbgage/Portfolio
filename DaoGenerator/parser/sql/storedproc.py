@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import json
 from model.storedproc import StoredProcedureModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants

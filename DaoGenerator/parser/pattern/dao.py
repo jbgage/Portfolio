@@ -1,5 +1,4 @@
-
-import json
+#!/usr/bin/env python
 from model.dao import DaoModel
 from model.daomethod import DaoMethodModel
 from parser.config import ConfigJsonParser

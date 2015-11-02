@@ -1,15 +1,15 @@
+#!/usr/bin/env python
+import os.path
+import logging
+import json
 from flask import Flask
 from flask_restful import Api 
 from search import Search
 from topics import TopicAnalyzer
 from property import PropertyUtil
-import os.path
-import logging
-import json
 from logging.config import fileConfig
 app = Flask(__name__)
 api = Api(app)
-
 @app.route('/topics/tfidf/<string:term>' , methods=['GET'])
 def get_tfidf(term):
     fileConfig('config/logging.conf')
@@ -30,8 +30,6 @@ def get_tfidf(term):
     except Exception , error:
         logger.error('Exception occurred - {0}'.format(str(error)))
     return json_data
-
-
 @app.route('/topics/lsi/<string:term>' , methods=['GET'])
 def get_lsi(term):
     fileConfig('config/logging.conf')
@@ -52,7 +50,6 @@ def get_lsi(term):
     except Exception , error:
         logger.error('Exception occurred - {0}'.format(str(error)))
     return json_data
-
 @app.route('/topics/lda/<string:term>' , methods=['GET'])
 def get_lda(term):
     fileConfig('config/logging.conf')
@@ -73,7 +70,6 @@ def get_lda(term):
     except Exception , error:
         logger.error('Exception occurred - {0}'.format(str(error)))
     return json_data
-
 @app.route('/topics/search/<string:term>' , methods=['GET'])
 def search(term=''):
     fileConfig('config/logging.conf')
@@ -92,6 +88,5 @@ def search(term=''):
     except Exception , error:
         logger.error('Exception occurred - {0}'.format(str(error)))
     return json_data
-
 if __name__ == '__main__':
     app.run()

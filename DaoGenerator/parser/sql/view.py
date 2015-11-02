@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-import os
-import json
 from model.view import ViewModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
@@ -21,4 +19,3 @@ class ViewJsonParser:
         except IOError, ioerr:
             self.__logger.error( '***** ViewJsonParser.listOfViews: IO Error occured - {0}'.format(str(ioerr)))
         return view_list
-
