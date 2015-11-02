@@ -47,7 +47,7 @@ class TextGenerator(object):
         except Exception , error:
             self.logger.error('TextGenerator.generate_simple_markov_chain_novel_text: Error occurred - {0}'.format(str(error)))
         return words
-    def _tag_and_parse_corpus(self , corpus=''):
+    def __tag_and_parse_corpus(self , corpus=''):
         tag_re = re.compile(r'[*]|--|[^+*-]+')
         tag_set = set()
         symbols = set()
@@ -65,14 +65,14 @@ class TextGenerator(object):
                     sequence[i] = (word , tag)
                 cleaned_sentences.append(sequence) 
         except Exception , error:
-            self.logger.error('TextGenerator._tag_and_parse_corpus: Error occurred - {0}'.format(str(error)))
+            self.logger.error('TextGenerator.__tag_and_parse_corpus: Error occurred - {0}'.format(str(error)))
         return cleaned_sentences , list(tag_set) , list(symbols)
     def generate_hmm_novel_text(self ,  number_of_words_in_sentence=0 , number_of_sentences_per_record=0 , number_of_records=0 ):
         words = []
         punct_selector = ['. ' , '! ' , '? ']
         punctuation_stop_symbols = dict((ord(char) , None) for char in string.punctuation)
         try:
-            labelled_sequence , tag_set , symbols = self._tag_and_parse_corpus(self._corpus)
+            labelled_sequence , tag_set , symbols = self.__tag_and_parse_corpus(self._corpus)
             trainer = nltk.tag.hmm.HiddenMarkovModelTrainer(tag_set , symbols)
             hmm = trainer.train_supervised(labelled_sequence , estimator=lambda fd , bins: nltk.probability.LidstoneProbDist(fd , 0.1 , bins))
             rng = random.Random(len(self._corpus))
