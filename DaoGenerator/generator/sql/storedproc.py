@@ -3,11 +3,13 @@ import os
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 from parser.sql.storedproc import StoredProcedureJsonParser
+
 class SqlStoredProcedureGenerator:
     def __init__(self , configFileObj=None , deploymentUtil=None , logger=None):
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __use_database_block(self , database_name):
         sql_output = ''
         ls = os.linesep
@@ -18,6 +20,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__use_database_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __if_object_exists_block(self , schema_name , stored_proc_name):
         sql_output = ''
         ls = os.linesep
@@ -28,6 +31,7 @@ class SqlStoredProcedureGenerator:
         except Exception, error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__if_object_exists_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __create_procedure_statement_block(self , schema_name , stored_procedure_name):
         sql_output = ''
         ls = os.linesep
@@ -36,6 +40,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__create_procedure_statement_block: Error occured - {0}'.format( str(error) ))
         return sql_output
+    
     def __create_input_variables_block(self , input_variables):
         sql_output = ''
         ls = os.linesep
@@ -56,6 +61,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '********** __create_input_variables_block.__create_procedure_statement_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __create_select_statement_block(self , schema_name , table_name , view_name , select_fields_statement , where_clause):
         sql_output = ''
         ls = os.linesep
@@ -92,6 +98,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__create_select_statement_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __create_insert_statement_block(self , schema_name ,  table_name , input_variables , insert_statement_fields):
         sql_output = ''
         ls = os.linesep
@@ -122,6 +129,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__create_insert_statement_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __create_update_statement_block(self , schema_name , table_name , update_statement_fields , where_fields):
         sql_output = ''
         ls  = '\r\n'
@@ -167,6 +175,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__create_update_statement_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __create_delete_statement_block(self , schema_name , table_name , where_clause_fields ):
         sql_output  = ''
         ls = os.linesep
@@ -193,7 +202,8 @@ class SqlStoredProcedureGenerator:
                         sql_output += ls
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__create_delete_statement_block: Error occurred - {0}'.format( str(error) ))
-        return sql_output    
+        return sql_output
+        
     def __assemble_components(self , schema_name , stored_proc_name , table_name , view_name , stored_procedure_type , select_fields_statement , insert_statement_fields , update_statement_fields , where_clause , input_variables):
         sql_output = ''
         ls = os.linesep
@@ -218,6 +228,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.__assemble_components: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def createSqlStatement(self):
         sp_list = []
         sql_output = ''
@@ -232,6 +243,7 @@ class SqlStoredProcedureGenerator:
         except Exception , error:
             self.__logger.error( '******* SqlStoredProcedureGenerator.createSqlStatement: Error occurred - {0}'.format( str(error) ) )
         return sql_output
+    
     def createSqlFile(self):
         sql_file_name = '5-CreateStoredProcedures'
         try:

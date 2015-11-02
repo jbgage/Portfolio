@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import json
 from elasticsearch import Elasticsearch
-class Search(object):
+
+class Search:
+    
     def __init__(self,  propertyObj=None , logger=None):
         self._property = propertyObj
         self._logger = logger
+    
     def get(self , term=''):
         documents = []
         try:

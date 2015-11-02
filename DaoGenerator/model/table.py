@@ -1,20 +1,26 @@
 #!/usr/bin/env python
 class TableModel(object):
+    
     def __init__(self , tableName = '', fieldsArray = []):
         self._tableName = tableName
         self._fieldsArray = fieldsArray
+    
     @property    
     def tableName(self):
         return self._tableName
+    
     @tableName.setter
     def tableName(self , value):
         self._tableName = value
+    
     @property
     def fieldsArray(self):
         return self._fieldsArray
+    
     @fieldsArray.setter    
     def fieldsArray(self , value):
         self._fieldsArray = value
+    
     def toString(self):
         ls = '\r\n'
         output_string = 'Table Name = ' + self._tableName + ls

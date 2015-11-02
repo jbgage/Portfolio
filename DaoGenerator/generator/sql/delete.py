@@ -2,11 +2,14 @@ import os
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 from parser.sql.schema import SchemaJsonParser
+
 class DeleteDataScriptGenerator(object):
+    
     def __init__(self , configFileObj = None , deploymentUtil=None , logger=None):
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __using_database_block(self , database_name):
         sql_output = ''
         ls = os.linesep
@@ -17,6 +20,7 @@ class DeleteDataScriptGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DeleteDataScriptGenerator.__using_block: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_delete_statement(self , schema_name , table_name):
         sql_output = ''
         ls = os.linesep
@@ -27,6 +31,7 @@ class DeleteDataScriptGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def assemble_components(self , database_name , schema_name , table_list):
         sql_output = ''
         try:
@@ -36,6 +41,7 @@ class DeleteDataScriptGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def generateSqlScript(self):
         sql_file_name = 'DeleteAllDataFromTables.sql'
         table_list = []

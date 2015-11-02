@@ -2,6 +2,7 @@
 import os
 from parser.pattern.valueobject import ValueObjectJsonParser
 from parser.constant import JsonConstants
+
 class ValueObjectClassGenerator:
     __open_brace = "{"
     __close_brace = "}"
@@ -9,18 +10,22 @@ class ValueObjectClassGenerator:
         self.__configFileObj = configFileObject
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __import_block(self , tab_char='\t'):
         ls = os.linesep
         import_block = tab_char + 'import java.util.Serializable;' + ls
         return import_block
+    
     def __package_block(self):
         ls = os.linesep
         namespace_block = 'package {0}.model; {1}'.format(self.__configFileObj.globalClassNameSpace() , ls)
         return namespace_block
+    
     def __class_definition_block(self , valueObjectName):
         ls = os.linesep
         class_def = 'public class {0} implements Serializable'.format(valueObjectName)
         return class_def
+    
     def __instance_variables_block(self , tab_char , field_array):
         instance_variables = ''
         ls = os.linesep
@@ -28,8 +33,10 @@ class ValueObjectClassGenerator:
             for element in field_array:
                 instance_variables += tab_char + 'private {0} {1};'.format(element['data-type'] , element['field-name']) + ls
         return instance_variables
+    
     def __constructor(self , valueObjectName):
-        return 'public {0}() '.format(valueObjectName)        
+        return 'public {0}() '.format(valueObjectName)     
+       
     def __method_definition_block(self , tab_char , field_array):
         method_definition = ''
         try:
@@ -39,6 +46,7 @@ class ValueObjectClassGenerator:
         except Exception , err:
             self.__logger.error( '****** ValueObjectClassGenerator._methodDefinitionBlock: Error occured - {0}'.format(str(err)))
         return method_definition
+    
     def __generate_getters(self , tab_char , field_array):
         ls = os.linesep
         method_definition = ''
@@ -51,6 +59,7 @@ class ValueObjectClassGenerator:
         except Exception , err:
             self.__logger.error( '****** ValueObjectClassGenerator._generate_getters: Error occured - {0}'.format(str(err))) 
         return method_definition
+    
     def __generate_setters(self , tab_char , field_array):
         ls = os.linesep
         method_definition = ''
@@ -63,6 +72,7 @@ class ValueObjectClassGenerator:
         except Exception , err:
             self.__logger.error( '****** ValueObjectClassGenerator._generate_getters: Error occured - {0}'.format(str(err))) 
         return method_definition
+    
     def __assemble_class_components(self , voName , fieldArr):
         ls = os.linesep
         class_definition = ''
@@ -76,6 +86,7 @@ class ValueObjectClassGenerator:
         class_definition += self.__method_definition_block('\t\t' , fieldArr)
         class_definition += self.__close_brace + ls
         return class_definition
+    
     def generateClassFiles(self):
         voParser = ValueObjectJsonParser(self.__configFileObj, self.__logger)
         vo_list = []

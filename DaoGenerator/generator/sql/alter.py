@@ -2,11 +2,14 @@ import os
 from parser.constant import JsonConstants
 from parser.config import ConfigJsonParser
 from parser.sql.schema import SchemaJsonParser
+
 class AlterTableScriptGenerator(object):
+    
     def __init__(self , configFileObj=None , deploymentUtil=None , logger=None):
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __use_database_block(self , database_name):
         sql_output = ''
         ls = os.linesep
@@ -16,6 +19,7 @@ class AlterTableScriptGenerator(object):
         except Exception , error:
             self.__logger.error( '******* AlterTableScriptGenerator.__use_database_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __if_object_exists_block(self , schema_name , table_name ,  constraint_name):
         sql_output = ''
         ls = os.linesep
@@ -29,6 +33,7 @@ class AlterTableScriptGenerator(object):
         except Exception, error:
             self.__logger.error( '******* AlterTableScriptGenerator.__if_object_exists_block: Error occurred - {0}'.format( str(error) ))
         return sql_output
+    
     def __create_alter_table_statement(self , schema_name ,  table_name , constraint_name , foreign_key_name , foreign_key_table):
         alter_table_stmt = ''
         ls = os.linesep
@@ -38,6 +43,7 @@ class AlterTableScriptGenerator(object):
         alter_table_stmt += 'REFERENCES {0}.{1}({2})'.format(schema_name , foreign_key_table  , foreign_key_name) + ls
         alter_table_stmt += 'GO' + ls
         return alter_table_stmt
+    
     def assembleComponents(self , schema_name , table_name , field_list):
         assembled_components = ''
         ls = os.linesep
@@ -49,6 +55,7 @@ class AlterTableScriptGenerator(object):
                 assembled_components += self.__create_alter_table_statement(schema_name , table_name, constraint_name, element.foreignKeyName, element.foreignKeyTable)
                 assembled_components += ls
         return assembled_components
+    
     def generateAlterTableScript(self):
         sql_file_name = '3-AlterSchemaTables'
         tableParser = SchemaJsonParser(self.__configFileObj , self.__logger)

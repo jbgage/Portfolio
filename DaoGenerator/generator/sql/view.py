@@ -3,11 +3,14 @@ import os
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 from parser.sql.view import ViewJsonParser
+
 class SqlViewScriptGenerator:
+    
     def __init__(self , configFileObj = None , deploymentUtil=None ,  logger=None):
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __using_database_block(self , database_name):
         sql_output = ''
         ls = os.linesep
@@ -18,6 +21,7 @@ class SqlViewScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlViewScriptGenerator.__using_block: Exception occured - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_create_view_header(self , database_name ,  schema_name , view_name):
         sql_output = ''
         ls = os.linesep
@@ -27,6 +31,7 @@ class SqlViewScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlViewScriptGenerator.__generate_create_view_header: Exception occured - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_if_view_exists_block(self , database_name , schema_name , view_name):
         sql_output = ''
         ls = os.linesep
@@ -37,6 +42,7 @@ class SqlViewScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlViewScriptGenerator.__generate_if_view_exists_block: Exception occured - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_view_select_clause(self , select_fields):
         sql_output = ''
         select_clause = 'SELECT '
@@ -55,6 +61,7 @@ class SqlViewScriptGenerator:
             self.__logger.error( '******** SqlViewScriptGenerator.__generate_view_select_clause: Exception occured - Message = {0}'.format(str(err)))
         sql_output = select_clause
         return sql_output
+    
     def __generate_view_from_clause(self , database_name , schema_name ,  from_table_list ):
         sql_output = ''
         from_clause = 'FROM '
@@ -68,6 +75,7 @@ class SqlViewScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlViewScriptGenerator.__generate_view_from_clause: Exception occured - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_view_where_clause(self , schema_name ,  where_clause_fields):
         sql_output = ''
         ls = os.linesep
@@ -82,6 +90,7 @@ class SqlViewScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlViewScriptGenerator.__generate_view_where_clause: Exception occured - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __assemble_components(self , database_name , schema_name , view_name , select_fields , from_table_list , where_clause):
         sql_output = ''
         ls = os.linesep
@@ -102,6 +111,7 @@ class SqlViewScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlViewScriptGenerator.__assemble_components: Exception occured - Message = {0}'.format(str(err)))
         return sql_output
+    
     def createSqlStatement(self ,database_name ,  database_schema_name , view):
         sql_output = ''
         try:
@@ -109,7 +119,8 @@ class SqlViewScriptGenerator:
                 sql_output += self.__assemble_components(database_name , database_schema_name , view.name , view.selectClause , view.fromClause , view.whereClause)
         except Exception , error:
             self.__logger.error( '***** SqlViewScriptGenerator.createSqlStatement: Error occurred - {0}'.format(str(error)))
-        return sql_output    
+        return sql_output
+        
     def createSqlFile(self):
         viewParser = ViewJsonParser(self.__configFileObj, self.__logger)
         sql_file_name = '4-CreateSchemaViews'
@@ -128,5 +139,3 @@ class SqlViewScriptGenerator:
                         sql_file_obj.write(self.createSqlStatement(self.__configFileObj.databaseName() , self.__configFileObj.databaseSchemaName() , views))
         except IOError, ioerror:
             self.__logger.error( '***** SqlViewScriptGenerator.createSqlFile: IOError occurred - {0}'.format(str(ioerror)))
-        
-     

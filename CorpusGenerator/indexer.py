@@ -9,12 +9,15 @@ from collections import Mapping
 from datetime import datetime
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
+
 class SearchEngineIndexer(object):
+    
     def __init__(self, searchEngineUrl='' , dropIndex=False , indexName='' , logger=None):
         self._searchUrl = searchEngineUrl
         self._dropIndexFlag = dropIndex
         self._indexName = indexName
         self.logger = logger
+        
     def __retrieve_models(self , model_path=''):
         jsonObj = {}
         try:
@@ -29,6 +32,7 @@ class SearchEngineIndexer(object):
             self.logger.error('SearchEngineIndexer.__retrieve_models: Error occured - {0}'.format(str(error)))
             traceback.print_exc(file=sys.stdout)
         return jsonObj
+    
     def __retrieve_models_as_objects(self , model_path='' , type_name=''):
         jsonObj = {}
         try:
@@ -46,6 +50,7 @@ class SearchEngineIndexer(object):
             self.logger.error('SearchEngineIndexer.__retrieve_models_as_objects: Error occured - {0}'.format(str(error)))
             traceback.print_exc(file=sys.stdout)
         return jsonObj
+    
     def __recurse_dict(self , target={} , reset_key_val=''):
         d = {}
         for key , val in target.iteritems():
@@ -54,8 +59,10 @@ class SearchEngineIndexer(object):
             else:
                 d[key] = reset_key_val
         return d
+    
     def __reinitialize_obj(self , target={} ):
         return self.__recurse_dict(target=target , reset_key_val='')
+    
     def __create_documents(self , inputFilePath='' , delimiter='' , index_model_path='' , document_model_path=''):
         bulk_data = []
         try:
@@ -82,6 +89,7 @@ class SearchEngineIndexer(object):
         except Exception , error:
             self.logger.error('SearchEngineIndexer.__create_documents: Error occured - {0}'.format(str(error)))
         return bulk_data
+    
     def ingestDataIntoElasticSearchStore(self , 
                                          inputFilePath='' , 
                                          delimiter='' , 
@@ -103,4 +111,3 @@ class SearchEngineIndexer(object):
                 es.bulk(index=self._indexName , body=bulk_data , refresh=True)
         except Exception , error:
             self.logger.error('SearchEngineIndexer.ingestDataIntoElasticSearchStore: Error occured - {0}'.format(str(error)))
-        

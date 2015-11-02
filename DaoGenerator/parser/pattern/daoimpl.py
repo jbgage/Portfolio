@@ -3,10 +3,13 @@ from model.daoimpl import DaoImplModel
 from model.daoimplmethod import DaoImplMethodModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
+
 class DaoImplObjectJsonParser:
+    
     def __init__(self , configFileObject = None , logger=None):
         self.__configFileObj = configFileObject
         self.__logger = logger
+    
     def listOfDaoImpls(self):
         daoImplList = []
         json_file_name = ''
@@ -22,6 +25,7 @@ class DaoImplObjectJsonParser:
         except Exception , error:
             self.__logger.error( '********** DaoImplObjectJsonParser.listOfDaoImpls: Error occurred - {0}'.format(str(error)))
         return daoImplList
+    
     def listOfDaoImplMethods(self , methodList):
         listOfDaoMethods = []
         try:
@@ -39,5 +43,4 @@ class DaoImplObjectJsonParser:
                     listOfDaoMethods.append(implMethod)
         except Exception , error:
             self.__logger.error( '********** DaoImplObjectJsonParser.listOfDaoImplMethods: Error occurred - {0}'.format(str(error)))
-        return listOfDaoMethods
-        
+        return listOfDaoMethods       

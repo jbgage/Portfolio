@@ -3,7 +3,9 @@ import os
 from parser.config import ConfigJsonParser
 from parser.sql.schema import SchemaJsonParser
 from parser.constant import JsonConstants
+
 class SqlTableScriptGenerator:
+    
     __open_brace = '('
     __close_brace = ')'
     __end_statement = ';'
@@ -11,6 +13,7 @@ class SqlTableScriptGenerator:
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __using_database_block(self , database_name , schema_name):
         sql_output = ''
         ls = os.linesep
@@ -21,6 +24,7 @@ class SqlTableScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlTableScriptGenerator.__using_database_block: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_create_table_header(self , tableName , tab_char):
         sql_output = ''
         ls = os.linesep
@@ -29,6 +33,7 @@ class SqlTableScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlTableScriptGenerator.__generate_create_table_header: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_table_field_contents(self , fieldArray  , tab_char):
         ls = os.linesep
         sql_output = ''
@@ -56,11 +61,13 @@ class SqlTableScriptGenerator:
         except Exception , err:
             self.__logger.error( '******** SqlTableScriptGenerator.__generate_table_field_contents: Exception occured - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __assemble_components(self , tableName , fieldArr , tab_char):
         component_definition = ''
         component_definition += self.__generate_create_table_header(tableName , tab_char)
         component_definition += self.__generate_table_field_contents(fieldArr , tab_char)
         return component_definition
+    
     def createSqlStatement(self):
         table_parser = SchemaJsonParser(self.__configFileObj , self.__logger)
         table_list = []
@@ -78,6 +85,7 @@ class SqlTableScriptGenerator:
         except Exception , error:
             self.__logger.error( '***** SqlTableScriptGenerator.createSqlStatement: Error occurred - {0}'.format(str(error)))
         return sql_output
+    
     def createSqlFile(self):
         template_sql_file_name = '2-CreateSchemaTables'
         sql_deployment_directory = ''

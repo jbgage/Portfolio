@@ -17,10 +17,13 @@ from nltk.parse.featurechart import FeatureChartParser
 from nltk.parse.pchart import InsideChartParser
 from nltk.parse.generate import generate as generate_text
 from nltk.grammar import Nonterminal
+
 class TextGenerator(object):
+    
     def __init__(self, corpus_text_input='' , logger=None):
         self._corpus = corpus_text_input
         self.logger = logger
+        
     def generate_simple_markov_chain_novel_text(self , number_of_words_in_sentence=0 , number_of_sentences_per_record=0 , number_of_records=0 ):
         tokens = word_tokenize(self._corpus)
         cache = {}
@@ -47,6 +50,7 @@ class TextGenerator(object):
         except Exception , error:
             self.logger.error('TextGenerator.generate_simple_markov_chain_novel_text: Error occurred - {0}'.format(str(error)))
         return words
+    
     def __tag_and_parse_corpus(self , corpus=''):
         tag_re = re.compile(r'[*]|--|[^+*-]+')
         tag_set = set()
@@ -67,6 +71,7 @@ class TextGenerator(object):
         except Exception , error:
             self.logger.error('TextGenerator.__tag_and_parse_corpus: Error occurred - {0}'.format(str(error)))
         return cleaned_sentences , list(tag_set) , list(symbols)
+    
     def generate_hmm_novel_text(self ,  number_of_words_in_sentence=0 , number_of_sentences_per_record=0 , number_of_records=0 ):
         words = []
         punct_selector = ['. ' , '! ' , '? ']
@@ -87,6 +92,7 @@ class TextGenerator(object):
         except Exception , error:
             self.logger.error('TextGenerator.generate_hmm_novel_text: Error occurred - {0}'.format(str(error)))   
         return words
+    
     def generate_context_free_grammar_novel_text(self , number_of_words_in_sentence=0 , number_of_sentences_per_record=0,  number_of_records=0):
         words = []
         punct_selector = ['. ' , '! ' , '? ']
@@ -123,11 +129,13 @@ class TextGenerator(object):
         except Exception , error:
             self.logger.error('TextGenerator.generate_context_free_grammar_novel_text: Error occurred - {0}'.format(str(error)))   
         return '. '.join(words)
+    
     def generate_direct_text(self , number_of_sentences=0 , number_of_records=0):
         words=[]
         sentence_tokens = nltk.sent_tokenize(self._corpus)
         words = [random.choice(sentence_tokens) for _ in range(number_of_sentences) for _ in range(number_of_records)]
         return words
+    
     def generate_csv(self , data=[] , output_file_name='' , delimiter=''):
         try:
             if len(data) > 0:

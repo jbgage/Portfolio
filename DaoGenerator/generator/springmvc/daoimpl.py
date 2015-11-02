@@ -3,11 +3,13 @@ import os
 from parser.config import ConfigJsonParser
 from parser.pattern.daoimpl import DaoImplObjectJsonParser
 from parser.constant import JsonConstants
+
 class DaoImplClassGenerator:
     def __init__(self , configFileObj=None , deploymentUtil=None , logger=None):
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __import_block(self , global_namespace='' , model_name='' , mapper_name='' , dao_name='' , tab_char=''):
         ls = os.linesep
         import_block = ''
@@ -25,15 +27,18 @@ class DaoImplClassGenerator:
         import_block += tab_char + 'import {0}.model.{1};{2}'.format(global_namespace , model_name , ls)
         import_block += tab_char + 'import {0}.persistence.dao.{1}; {2}'.format(global_namespace , dao_name , ls)
         return import_block
+    
     def __package_declaration(self , global_namespace):
         ls = os.linesep
         namespace_block = ''
         namespace_block += 'package {0}.persistence.dao.daoImpl;'.format(global_namespace ) + ls
         return namespace_block
+    
     def __class_definition_block(self , class_name , dao_impl_name , tab_char):
         ls = os.linesep
         class_declaration = '{0}public class {1} : {2} '.format(tab_char , class_name , dao_impl_name ) + ls
         return class_declaration
+    
     def __class_comment_block(self , class_comment , tab_char):
         class_comment_output = ''
         ls = os.linesep
@@ -42,6 +47,7 @@ class DaoImplClassGenerator:
             class_comment_output += tab_char + '-  {0}{1}'.format(class_comment , ls)
             class_comment_output += tab_char + ('*' * (len(class_comment) + 1)) + '/' + ls
         return class_comment_output
+    
     def __method_comment_block(self , method_comment , tab_char):
         method_comment_output = ''
         ls = os.linesep
@@ -50,6 +56,7 @@ class DaoImplClassGenerator:
             method_comment_output += tab_char + '-  {0}{1}'.format(method_comment , ls)
             method_comment_output += tab_char + ('*' * (len(method_comment) + 1)) + '/' + ls
         return method_comment_output
+    
     def __method_declaration(self , method_name , return_type , value_object_type, method_input_variables , tab_char):
         method_declaration = ''
         ls = os.linesep
@@ -79,6 +86,7 @@ class DaoImplClassGenerator:
         except Exception , error:
             self.__logger.error( '*********** DaoImplClassGenerator._method_declaration: Error occurred - {0}'.format(str(error)))
         return method_declaration
+    
     def __generate_constructor(self , class_name , tab_char):
         constructor = ''
         ls = os.linesep
@@ -87,6 +95,7 @@ class DaoImplClassGenerator:
         constructor += '{0}}}'.format(tab_char) + ls
         constructor += ls
         return constructor
+    
     def __generate_autowired_block(self , tab_char=''):
         ls = os.linesep
         block = ''
@@ -97,11 +106,13 @@ class DaoImplClassGenerator:
         block += tab_char + '@Autowired' + ls
         block += tab_char + '@Resource(name="dataSource")' + ls
         block += tab_char + 'private DataSource dataSource;' + ls         
-        return block;
+        return block
+    
     def __generate_logger_block(self , class_name=''):
         ls = os.linesep
         block = 'private Logger logger = LoggerFactory.getLogger({0}.class.getName())'.format(class_name) + ls
         return block
+    
     def __method_construction(self , class_name , method_name , value_object_type , return_type , stored_procedure_name , sql_command_input_variables , result_set_parameters  , tab_char):
         method_construct = ''
         ls = os.linesep
@@ -132,6 +143,7 @@ class DaoImplClassGenerator:
         except Exception , error:
             self.__logger.error( '************* DaoImplClassGenerator.__methodConstruction: Error occurred - {0}'.format(str(error)))
         return method_construct
+    
     def __construct_sql_command_section(self , value_object_type , stored_procedure_name  , return_type , tab_char):
         sql_command_construct = ''
         ls = os.linesep
@@ -147,6 +159,7 @@ class DaoImplClassGenerator:
         except Exception , error:
             self.__logger.error( '************* DaoImplClassGenerator.__construct_sql_command_section: Error occurred - {0}'.format(str(error)))
         return sql_command_construct
+    
     def __assemble_components(self , global_namespace , className , class_comment , daoName , method_list):
         assembled_components = ''
         ls = os.linesep
@@ -166,8 +179,8 @@ class DaoImplClassGenerator:
             assembled_components += (tab_char * 2) +'}' + ls
             assembled_components += ls
         assembled_components += '}' + ls
-
         return assembled_components
+    
     def generateClassFiles(self):
         daoImplParser = DaoImplObjectJsonParser(self.__configFileObj, self.__logger)
         daoImplList = daoImplParser.listOfDaoImpls()

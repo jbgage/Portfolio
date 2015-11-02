@@ -10,19 +10,24 @@ from generator import TextGenerator
 from property import PropertyUtil
 from indexer import SearchEngineIndexer
 from logging.config import fileConfig
+
 def __load_nltk_data(file_path='' , prefix='' ):
     return nltk.data.load(file_path[len(prefix):] )
+
 def __load_nltk_data_as_string(file_path='' , prefix='' ):
     return nltk.data.load(file_path[len(prefix):] , format='text' )
+
 def __load_url_data(url=''):
     response = urllib2.urlopen(url)
     return response.read()
+
 def __load_local_file(file_path='' ):
     data = ''
     if os.path.isfile(file_path):
         with open(file_path) as local_file:
             data = local_file.read()
     return data
+
 def __create_property_dict(properties=None):
     property_dict = {}
     property_dict['engine-type'] = properties.corpusEngineType
@@ -40,6 +45,7 @@ def __create_property_dict(properties=None):
     property_dict['is-datafile-to-be-generated'] = properties.isOperationGenerateDatafile
     property_dict['is-datafile-to-be-indexed'] = properties.isOperationIndexDataFile
     return property_dict
+
 def __generate_array_of_records(text_generator=None , 
                                engine_type='' , 
                                bGenerateUuids=True , 
@@ -67,6 +73,7 @@ def __generate_array_of_records(text_generator=None ,
     else:
         data_obj = [(i , novel_text) for i , novel_text in enumerate(data_obj)]
     return data_obj
+
 def main(args):
     fileConfig('config/logging.cfg')
     prop = PropertyUtil('config/app.cfg')

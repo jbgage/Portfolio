@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import jsonutil
 import os
-class ConfigurationUtil(object):
+
+class ConfigurationUtil:
+    
     def __init__(self, configurationFilePath='' , logger=None):
         self._configFilePath = configurationFilePath
         self.logger = logger
+    
     def createConfigurationObject(self):
         configObj = {}
         jsonConfig = {}

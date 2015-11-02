@@ -3,10 +3,13 @@ from model.profile import ProfileModel
 from model.profilemethod import ProfileMethodModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
+
 class ProfileObjectJsonParser(object):
+    
     def __init__(self , configFileObj=None , logger=None):
         self.__configFileObj = configFileObj
         self.__logger = logger
+    
     def listOfProfiles(self):
         profileList = []
         try:
@@ -20,6 +23,7 @@ class ProfileObjectJsonParser(object):
         except Exception , error:
             self.logger.error( '**************** ProfileObjectJsonParser.listOfProfiles(): Error occurred - {0}'.format(str(error)))
         return profileList
+    
     def listOfProfileMethods(self , method_list):
         profileMethodList = []
         for element in method_list:

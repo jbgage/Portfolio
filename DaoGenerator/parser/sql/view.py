@@ -3,9 +3,11 @@ from model.view import ViewModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 class ViewJsonParser:
+    
     def __init__(self , configFileObj = None , logger=None):
         self.__configFileObj = configFileObj
         self.__logger = logger
+    
     def listOfViews(self):
         view_list = []
         try:

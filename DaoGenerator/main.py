@@ -16,6 +16,7 @@ from generator.sql.drop import DropTableViewGenerator
 from generator.sql.delete import DeleteDataScriptGenerator
 from logging.config import fileConfig
 from optparse import OptionParser
+
 def main(args):
     fileConfig('config/logging.cfg')
     logger = logging.getLogger(__name__)

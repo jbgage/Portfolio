@@ -3,10 +3,13 @@ from model.table import TableModel
 from model.tablefield import TableFieldModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
+
 class SchemaJsonParser:
+    
     def __init__(self , configFileObj = None , logger=None):
         self.__configFileObj = configFileObj
         self.__logger = logger
+    
     def listOfTables(self):
         table_model_list = []
         try:
@@ -20,6 +23,7 @@ class SchemaJsonParser:
         except Exception, err:
             self.__logger.error( '***** SchemaJsonParser.listOfTables: Error occured - {0}'.format(str(err)))
         return table_model_list
+    
     def listOfTableField(self , method_list):
         tableMethodList = []
         for element in method_list:

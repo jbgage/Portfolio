@@ -3,32 +3,46 @@ import json
 import os
 from constant import JsonConstants
 from util.configutil import ConfigurationUtil
+
 class ConfigJsonParser:
+    
     def __init__(self , configFileObj=None , logger=None):
         self.__configFileObj = configFileObj
         self.__logger = logger
+    
     def databaseName(self):
         return self.__configFileObj['main-config']['databaseName']   
+    
     def databaseSchemaName(self):
         return self.__configFileObj['main-config']['databaseSchemaName']
+    
     def globalClassNameSpace(self):
         return self.__configFileObj['main-config']['globalClassNameSpace']
+    
     def sqlTables(self):
         return self.__configFileObj['database']['schema']['table']
+    
     def sqlViews(self):
         return self.__configFileObj['database']['views']['view']
+    
     def sqlStoredProcedures(self):
         return self.__configFileObj['database']['stored-procedures']['stored-procedure']
+    
     def profiles(self):
         return self.__configFileObj['profile']
+    
     def valueObjects(self):
         return self.__configFileObj['value-object']['value-object']
+    
     def daos(self):
         return self.__configFileObj['persistence']['dao']['dao']
+    
     def daoImpls(self):
         return self.__configFileObj['persistence']['dao-impl']['dao-impl']
+    
     def daoFactories(self):
         return self.__configFileObj['persistence']['dao-factory']
+    
     def jsonModelFilePath(self , modelName):
         json_file_name = ''
         json_directory = ''
@@ -54,8 +68,10 @@ class ConfigJsonParser:
         except IOError, ioerr:
             self.__logger.error( '***** ConfigJsonParser.jsonModelFilePath: IOError occurred - {0}'.format(str(ioerr)))
         return json_directory + json_file_name
+    
     def mainDeploymentDirectory(self):
         return self.__configFileObj['main-config']['directories']['main-deployment-dir']
+    
     def deploymentDirectory(self , directory_name):
         outputDirectory = ''
         try:

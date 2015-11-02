@@ -4,34 +4,44 @@ from gensim import models
 from gensim import similarities
 from gensim import corpora
 from collections import defaultdict
+
 class TopicAnalyzer(object):
+    
     def __init__(self, corpusText=[] , logger=None):
         self._corpus = corpusText
         self._stoplist = set('for a of the and to in'.split())
         self._logger = logger
+    
     def __tokenize_words_in_corpus(self):
         return [[word for word in document.lower().split() if word not in self._stoplist] for document in self._corpus ]
+    
     def __get_word_frequency_from_tokenized_corpus(self , tokenized_corpus = [[]]):
         freq = defaultdict(int)
         for text in tokenized_corpus:
             for token in text:
                 freq[token] += 1
         return freq
+    
     def __transform_corpus_by_word_freq(self , tokenized_corpus=[[]] , frequency_dict = {}, word_frequency_floor=1):
         text = [[token for token in text if frequency_dict[token] > word_frequency_floor] for text in tokenized_corpus]
         return text
+    
     def __get_corpora_dictionary_from_transformed_corpus(self , corpus=[[]]):
         return corpora.Dictionary(corpus)
+   
     def __get_bag_of_words_count_from_dictionary(self , dictionary={} , corpus=[[]]):
         return [dictionary.doc2bow(text) for text in corpus]
+    
     def __get_tfidf_from_bow(self , bow_corpus=[]):
         tfidf = models.TfidfModel(bow_corpus)
         return tfidf  
+    
     def __get_transformed_corpus(self , frequency_floor=1):
         tokenized_corpus = self.__tokenize_words_in_corpus()
         word_freq = self.__get_word_frequency_from_tokenized_corpus(tokenized_corpus)
         transformed_corpus = self.__transform_corpus_by_word_freq(tokenized_corpus, word_freq, frequency_floor)
         return transformed_corpus
+    
     def __json_transform(self , model=None , bag_of_words=None):
         _json_array = []
         if model is not None and bag_of_words is not None:
@@ -42,6 +52,7 @@ class TopicAnalyzer(object):
                     json_elem['value'] = elem[1]
                     _json_array.append(json_elem)
         return json.dumps(_json_array)
+    
     def get_tfidf(self , frequency_floor=1):
         tfidf = None
         transformed_corpus = [[]]
@@ -53,11 +64,13 @@ class TopicAnalyzer(object):
         except Exception , error:
             self._logger.error("TopicAnalyzer.get_tfidf: Error occurred - {0}".format(str(error)))
         return tfidf , bow
+    
     def get_tfidf_as_json(self , frequency_floor=1):
         json_data = {}
         (tfidf , bow) = self.get_tfidf(frequency_floor)
         json_data = self.__json_transform(model=tfidf , bag_of_words=bow)
         return json_data
+    
     def get_lsi(self , frequency_floor=1 , number_of_topics=5):
         lsi = None
         transformed_corpus = [[]]
@@ -72,6 +85,7 @@ class TopicAnalyzer(object):
         except Exception , error:
             self._logger.error("TopicAnalyzer.get_lsi: Error occurred - {0}".format( str(error)))
         return self.__json_transform(lsi , bow)
+    
     def get_lda(self , frequency_floor=1 , num_topics=5 , sample_ratio=5):
         ldaModel = None
         corpus = [[]]

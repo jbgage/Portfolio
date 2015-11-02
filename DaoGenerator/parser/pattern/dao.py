@@ -3,10 +3,13 @@ from model.dao import DaoModel
 from model.daomethod import DaoMethodModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
+
 class DaoObjectJsonParser(object):
+    
     def __init__(self , configFileObject = None , logger=None):
         self.__configFileObject = configFileObject
         self.__logger = logger
+    
     def listOfDaos(self):
         daoList = []
         try:
@@ -19,6 +22,7 @@ class DaoObjectJsonParser(object):
         except Exception , error:
             self.__logger.error( '**************** DaoObjectJsonParser.listOfDaos(): Error occurred - {0}'.format(str(error)))
         return daoList
+    
     def listOfDaoMethods(self , method_list):
         daoMethodList = []
         try:

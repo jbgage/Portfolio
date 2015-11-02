@@ -3,9 +3,11 @@ from model.storedproc import StoredProcedureModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 class StoredProcedureJsonParser:
+    
     def __init__(self , configFileObj=None , logger=None):
         self.__configFileObj = configFileObj
         self.__logger = logger
+    
     def listOfStoredProcedures(self):
         sp_list = []
         try:

@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 import os
 import json
-class JsonUtil(object):
+
+class JsonUtil:
+    
     def __init__(self, inputFile='' , logger = None):
         self.__inputFile = inputFile
         self.__logger = logger
+    
     def retrieveElementFromJsonConfig(self , elementName):
         parameter = ''
         json_data = self.retrieveJsonObjectFromJsonConfig()
         if json_data is not None:
             parameter = json_data[elementName]
         return parameter
+    
     def retrieveJsonObjectFromJsonConfig(self):
         jsonObject = None
         try:
@@ -22,6 +26,7 @@ class JsonUtil(object):
         except Exception , error:
             self.__logger.error("Error occurred - {0}".format(str(error)))
         return jsonObject
+    
     def retrieveJsonObjectFromJsonConfigPath(self , inputFilePath=''):
         jsonObject = None
         try:

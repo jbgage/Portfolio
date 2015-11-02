@@ -3,11 +3,13 @@ from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 from parser.sql.view import ViewJsonParser
 from parser.sql.schema import SchemaJsonParser
+
 class DropTableViewGenerator(object):
     def __init__(self , configFileObj=None, deploymentUtil=None , logger = None):
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
+        
     def __using_database_block(self , database_name):
         sql_output = ''
         ls = os.linesep
@@ -17,6 +19,7 @@ class DropTableViewGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DropTableViewGenerator.__using_block: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_drop_constraint_block(self , schema_name , table_name , field_list):
         sql_output = ''
         ls = os.linesep
@@ -35,6 +38,7 @@ class DropTableViewGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DropTableViewGenerator.__generate_if_constraint_exists_block: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_drop_view_block(self , schema_name ,  view_name):
         sql_output = ''
         ls = os.linesep
@@ -48,6 +52,7 @@ class DropTableViewGenerator(object):
         except Exception , err:
             print '******** DropTableViewGenerator.__generate_drop_view_block: Exception occurred - Message = {0}'.format(str(err))
         return sql_output
+    
     def __generate_drop_table_block(self ,  schema_name , table_name):
         sql_output = ''
         ls = os.linesep
@@ -61,6 +66,7 @@ class DropTableViewGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DropTableViewGenerator.__generate_drop_table_block: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __generate_drop_schema_block(self ,  schema_name ):
         sql_output = ''
         ls = os.linesep
@@ -71,6 +77,7 @@ class DropTableViewGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DropTableViewGenerator.__generate_drop_schema_block: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def __assemble_components(self , database_name , schema_name , view_list , table_list):
         sql_output =  ''
         try:
@@ -84,6 +91,7 @@ class DropTableViewGenerator(object):
         except Exception , err:
             print '******** DropTableViewGenerator.__assemble_components: Exception occurred - Message = {0}'.format(str(err))
         return sql_output
+    
     def generateSqlStatement(self , database_name , schema_name , table_list , view_list  ):
         sql_output = ''
         try:
@@ -91,6 +99,7 @@ class DropTableViewGenerator(object):
         except Exception , err:
             self.__logger.error( '******** DropTableViewGenerator.generateSqlStatement: Exception occurred - Message = {0}'.format(str(err)))
         return sql_output
+    
     def generateSqlScript(self):
         viewParser = ViewJsonParser(self.__configFileObj, self.__logger)
         tableParser = SchemaJsonParser(self.__configFileObj, self.__logger)

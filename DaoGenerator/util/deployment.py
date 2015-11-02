@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import os
-class DeploymentUtil(object):
+
+class DeploymentUtil:
+    
     def __init__(self ,  logger=None):
         self.__logger = logger
+        
     def createDeploymentDirectory(self , directoryName=''):
         try:
             if directoryName.count('/') > 0:
