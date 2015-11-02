@@ -10,7 +10,7 @@ The code in this repo is free to use, however I make no claims as its efficacy o
 
 ***Files in this Repository***
 
-The first project in this repo is a Python 2.7-based project called ['DaoGenerator'](https://github.com/jbgage/Portfolio/tree/master/DaoGenerator) which I created to generate SQL scripts and Java objects (utilizing Spring conventions) from a series of JSON files. This project represents my first foray into "polyglottal" code generation.
+The first project in this repo is a Python 2.7-based project called ["DaoGenerator"](https://github.com/jbgage/Portfolio/tree/master/DaoGenerator) which I created to generate SQL scripts and Java objects (utilizing Spring conventions) from a series of JSON files. This project represents my first foray into "polyglottal" code generation.
 
 The second project is also a Python 2.7-based project called ["CorpusGenerator"](https://github.com/jbgage/Portfolio/tree/master/CorpusGenerator) that uses the NLTK's HiddenMarkovModelTrainer object with a sample corpus from the NLTK's 'corpora' text-store to generate novel text. The functionality then indexes the resulting CSV file into Elasticsearch. There is additional functionality I am working on that uses NLTK's Chomsky-normalized CFG's and FCFG's to generate novel text as well. These additional features are currently a work in progress.
 
