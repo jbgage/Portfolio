@@ -2,7 +2,7 @@
 import jsonutil
 import os
 
-class ConfigurationUtil:
+class ConfigurationUtil(object):
     
     def __init__(self, configurationFilePath='' , logger=None):
         self._configFilePath = configurationFilePath

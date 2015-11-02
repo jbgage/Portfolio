@@ -4,7 +4,7 @@ from model.daoimplmethod import DaoImplMethodModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 
-class DaoImplObjectJsonParser:
+class DaoImplObjectJsonParser(object):
     
     def __init__(self , configFileObject = None , logger=None):
         self.__configFileObj = configFileObject

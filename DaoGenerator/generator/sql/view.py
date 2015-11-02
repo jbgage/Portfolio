@@ -4,7 +4,7 @@ from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 from parser.sql.view import ViewJsonParser
 
-class SqlViewScriptGenerator:
+class SqlViewScriptGenerator(object):
     
     def __init__(self , configFileObj = None , deploymentUtil=None ,  logger=None):
         self.__configFileObj = configFileObj

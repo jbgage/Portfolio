@@ -4,11 +4,12 @@ from parser.config import ConfigJsonParser
 from parser.sql.schema import SchemaJsonParser
 from parser.constant import JsonConstants
 
-class SqlTableScriptGenerator:
+class SqlTableScriptGenerator(object):
     
     __open_brace = '('
     __close_brace = ')'
     __end_statement = ';'
+    
     def __init__(self , configFileObj=None , deploymentUtil=None , logger=None):
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil

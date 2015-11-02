@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from ConfigParser import ConfigParser
 
-class PropertyUtil:
+class PropertyUtil(object):
     
     '''
     This class reads in properties contained in the project's configuration file and

@@ -4,7 +4,7 @@ from model.tablefield import TableFieldModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 
-class SchemaJsonParser:
+class SchemaJsonParser(object):
     
     def __init__(self , configFileObj = None , logger=None):
         self.__configFileObj = configFileObj

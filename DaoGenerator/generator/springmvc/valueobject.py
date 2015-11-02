@@ -3,7 +3,7 @@ import os
 from parser.pattern.valueobject import ValueObjectJsonParser
 from parser.constant import JsonConstants
 
-class ValueObjectClassGenerator:
+class ValueObjectClassGenerator(object):
     __open_brace = "{"
     __close_brace = "}"
     def __init__(self , configFileObject = None , deploymentUtil=None , logger=None):

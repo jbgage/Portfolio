@@ -2,7 +2,8 @@
 from model.view import ViewModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
-class ViewJsonParser:
+
+class ViewJsonParser(object):
     
     def __init__(self , configFileObj = None , logger=None):
         self.__configFileObj = configFileObj

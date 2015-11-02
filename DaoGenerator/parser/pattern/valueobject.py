@@ -3,7 +3,7 @@ from model.valueobject import VoModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 
-class ValueObjectJsonParser:
+class ValueObjectJsonParser(object):
     
     def __init__(self , configFileObj = None , logger=None):
         self.__configFileObj = configFileObj

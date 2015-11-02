@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-class JsonConstants:
+class JsonConstants(object):
     
     #JSON Model Config Parameters
     JSONCONFIG = 'config.json'

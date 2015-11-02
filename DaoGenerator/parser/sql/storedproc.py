@@ -2,7 +2,8 @@
 from model.storedproc import StoredProcedureModel
 from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
-class StoredProcedureJsonParser:
+
+class StoredProcedureJsonParser(object):
     
     def __init__(self , configFileObj=None , logger=None):
         self.__configFileObj = configFileObj

@@ -2,7 +2,7 @@
 import json
 from elasticsearch import Elasticsearch
 
-class Search:
+class Search(object):
     
     def __init__(self,  propertyObj=None , logger=None):
         self._property = propertyObj

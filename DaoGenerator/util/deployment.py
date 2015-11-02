@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 
-class DeploymentUtil:
+class DeploymentUtil(object):
     
     def __init__(self ,  logger=None):
         self.__logger = logger

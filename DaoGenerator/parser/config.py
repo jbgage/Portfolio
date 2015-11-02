@@ -4,7 +4,7 @@ import os
 from constant import JsonConstants
 from util.configutil import ConfigurationUtil
 
-class ConfigJsonParser:
+class ConfigJsonParser(object):
     
     def __init__(self , configFileObj=None , logger=None):
         self.__configFileObj = configFileObj

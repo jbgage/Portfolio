@@ -2,7 +2,7 @@
 import os
 import json
 
-class JsonUtil:
+class JsonUtil(object):
     
     def __init__(self, inputFile='' , logger = None):
         self.__inputFile = inputFile
