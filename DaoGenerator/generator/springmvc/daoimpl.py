@@ -1,11 +1,24 @@
 #!/usr/bin/env python
 import os
-from parser.config import ConfigJsonParser
 from parser.pattern.daoimpl import DaoImplObjectJsonParser
 from parser.constant import JsonConstants
 
 class DaoImplClassGenerator(object):
+    '''
+    This class is charged with generating the DAOImpl class files (in Java)
+    '''
+    
     def __init__(self , configFileObj=None , deploymentUtil=None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObj: The parser.config.ConfigJsonParser object passed to this class
+        @type configFileObj: parser.config.ConfigJsonParser
+        @param deploymentUtil: The deploy.DeploymentUtil object passed to the Generator
+        @type deploymentUtil:deploy.DeploymentUtil
+        @param logger: The logger object
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger

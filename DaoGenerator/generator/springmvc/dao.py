@@ -3,12 +3,24 @@ import os
 from model.dao import DaoModel
 from model.daomethod import DaoMethodModel
 from parser.constant import JsonConstants
-from parser.config import ConfigJsonParser
 from parser.pattern.dao import DaoObjectJsonParser
 
 class DaoClassGenerator(object):
+    '''
+    This class is charged with generating the DAO interfaces in Java.
+    '''
     
     def __init__(self , configFileObj = None , deploymentUtil=None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObj: The parser.config.ConfigJsonParser object passed to this class
+        @type configFileObj: parser.config.ConfigJsonParser
+        @param deploymentUtil: The deploy.DeploymentUtil object passed to the Generator
+        @type deploymentUtil:deploy.DeploymentUtil
+        @param logger: The logger object
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger

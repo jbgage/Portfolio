@@ -3,6 +3,9 @@ import os
 import json
 
 class JsonUtil(object):
+    '''
+    This class is a utility object to aid in the parsing and deserialization of the JSON 'model' files into objects.
+    '''
     
     def __init__(self, inputFile='' , logger = None):
         self.__inputFile = inputFile

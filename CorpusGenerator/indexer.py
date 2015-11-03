@@ -11,14 +11,39 @@ from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
 class SearchEngineIndexer(object):
+    '''
+    This is a utility class that handles the indexation of the resulting novel text (from the TextGenerator object) into the target
+    search engine 'store', which in the case of this project, is Elasticsearch.
+    '''
     
     def __init__(self, searchEngineUrl='' , dropIndex=False , indexName='' , logger=None):
+        '''
+        Constructor
+        
+        @param searchEngineUrl: The indexation url to the search engine; for Elasticsearch, this is usually http://localhost:9200
+        @type searchEngineUrl: string
+        @param dropIndex: Flag as to whether the associated index should be dropped 
+        @type dropIndex: boolean
+        @param indexName: The name of the search index
+        @type indexName: str
+        @param logger: The logger object
+        @type logger: logger
+        '''
         self._searchUrl = searchEngineUrl
         self._dropIndexFlag = dropIndex
         self._indexName = indexName
         self.logger = logger
         
     def __retrieve_models(self , model_path=''):
+        '''
+        This method retrieves JSON-formatted files that will be used during the indexation process. This 
+        method was created to preclude the need to have in-line JSON in the code, so this helper method was
+        devised. These JSON files are the config/ directory.
+        
+        @param model_path: The relative path to the model file(s)
+        @type model_path: str
+        @return: dict
+        '''
         jsonObj = {}
         try:
             if model_path != '':
@@ -34,6 +59,15 @@ class SearchEngineIndexer(object):
         return jsonObj
     
     def __retrieve_models_as_objects(self , model_path='' , type_name=''):
+        '''
+        This is a helper method to aid in the retrieval of the JSON model files as either a JSON object or a series of tuples.
+        
+        @param model_path: The relative path to the model files.
+        @type model_path: str
+        @param type_name: The 'type' of object. 
+        @type type_name: str
+        @return: dict
+        '''
         jsonObj = {}
         try:
             if model_path != '':
@@ -52,6 +86,17 @@ class SearchEngineIndexer(object):
         return jsonObj
     
     def __recurse_dict(self , target={} , reset_key_val=''):
+        '''
+        This method is used to reset the keys of a given dictionary object to the same value. It
+        is primarily used to reset all of the values in the dictionary objects that are initially 
+        created during the initial indexation processes.
+         
+        @param target: The dictionary object that is recursed through in order to 'reset' the values of the keys.
+        @type target: dict
+        @param reset_key_val: The value all keys in 'target' are set to.
+        @type reset_key_val: str
+        @return: dict
+        '''
         d = {}
         for key , val in target.iteritems():
             if isinstance(val , dict):
@@ -61,9 +106,29 @@ class SearchEngineIndexer(object):
         return d
     
     def __reinitialize_obj(self , target={} ):
+        '''
+        This is a utility method used to set all the keys of the 'target' dictionary to ''.
+        
+        @param target: The dictionary to 'reset'.
+        @type target: dict
+        @return: dict
+        '''
         return self.__recurse_dict(target=target , reset_key_val='')
     
     def __create_documents(self , inputFilePath='' , delimiter='' , index_model_path='' , document_model_path=''):
+        '''
+        This method is charged with creating Elasticsearch documents.
+        
+        @param inputFilePath: The path to the CSV file
+        @type inputFilePath: str
+        @param delimiter: The delimiter used in the CSV file
+        @type delimiter: str
+        @param index_model_path: The path to the 'index.model.json' file.
+        @type index_model_path: str
+        @param document_model_path: The path to the 'document.model.json' file.
+        @type document_model_path: str
+        @return: list
+        '''
         bulk_data = []
         try:
             index_model = self.__retrieve_models(index_model_path)
@@ -97,13 +162,29 @@ class SearchEngineIndexer(object):
                                          document_model_path='' ,
                                          request_model_path='' , 
                                          refresh=True):
+        '''
+        This method is charged with indexing the documents created above via Elasticsearch's Bulk API
+        
+        @param inputFilePath: The path to the CSV file
+        @type inputFilePath: str
+        @param delimiter: The delimiter used in the CSV file
+        @type delimiter: str
+        @param index_model_path: The path to the 'index.model.json' file.
+        @type index_model_path: str
+        @param document_model_path: The path to the 'document.model.json' file.
+        @type document_model_path: str
+        @param request_model_path: The path to the 'search.engine.model.json' file
+        @type request_model_path: str
+        @param refresh: A flag to determine if the index should be refreshed.
+        @type refresh: bool
+        '''
         es = None
         request_model = {}
         try:
             es = Elasticsearch(hosts = self._searchUrl)
             request_model = self.__retrieve_models(request_model_path)
             if self._dropIndexFlag is True:
-                self.logger.info('Dropping Index {0}.'.format(self._indexName))
+                self.logger.info('Dropping Index: \'{0}\'.'.format(self._indexName))
                 es.indices.delete(index=self._indexName)
                 self.logger.info('Creating new index...')
                 es.indices.create(index=self._indexName , body=request_model)

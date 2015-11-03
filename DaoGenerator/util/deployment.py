@@ -2,6 +2,10 @@
 import os
 
 class DeploymentUtil(object):
+    '''
+    This is a utility class used to create the underlying deployment directories on the system for the generators
+    to write their respective files to.
+    '''
     
     def __init__(self ,  logger=None):
         self.__logger = logger

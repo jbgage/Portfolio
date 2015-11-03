@@ -1,16 +1,28 @@
 #!/usr/bin/env python
 import os
-from parser.config import ConfigJsonParser
 from parser.sql.schema import SchemaJsonParser
 from parser.constant import JsonConstants
 
 class SqlTableScriptGenerator(object):
+    '''
+    This class is charged with creating a SQL script that contains a series of CREATE TABLE statements.
+    '''
     
     __open_brace = '('
     __close_brace = ')'
     __end_statement = ';'
     
     def __init__(self , configFileObj=None , deploymentUtil=None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObj: The parser.config.ConfigJsonParser object passed to this class
+        @type configFileObj: parser.config.ConfigJsonParser
+        @param deploymentUtil: The deploy.DeploymentUtil object passed to the Generator
+        @type deploymentUtil:deploy.DeploymentUtil
+        @param logger: The logger object
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger

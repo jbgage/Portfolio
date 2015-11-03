@@ -1,11 +1,23 @@
 import os
-from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 from parser.sql.schema import SchemaJsonParser
 
 class DeleteDataScriptGenerator(object):
+    '''
+    This class is charged with generating a SQL script that contains DELETE statements against the associated schema.
+    '''
     
     def __init__(self , configFileObj = None , deploymentUtil=None , logger=None):
+        '''
+        Constructor 
+        
+        @param configFileObj: The parser.config.ConfigJsonParser object passed to this class
+        @type configFileObj: parser.config.ConfigJsonParser
+        @param deploymentUtil: The deploy.DeploymentUtil object passed to the Generator
+        @type deploymentUtil:deploy.DeploymentUtil
+        @param logger: The logger object
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger

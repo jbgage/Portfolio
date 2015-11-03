@@ -19,12 +19,38 @@ from nltk.parse.generate import generate as generate_text
 from nltk.grammar import Nonterminal
 
 class TextGenerator(object):
-    
+    '''
+    This class is the primary generator of novel text for this project. The options available to the project 
+    at run-time are governed by the flags contained in the 'config/app.fg' file. The methods below aid in the
+    generation and construction of novel text by either: 1) a simplified Markov Chain generator; 2) an NLTK-based
+    Hidden Markov Model Trainer; 3) a parsing of Chomsky-normalized CFG-files to generate novel text and, lastly;
+    4) a simple mechanism that selects words at random from the given corpus of text.
+    '''
+        
     def __init__(self, corpus_text_input='' , logger=None):
+        '''
+        Constructor
+        
+        @param corpus_text_input: The full text of the corpus used to generate novel text.
+        @type corpus_text_input: str
+        @param logger: The project's logger utility
+        @type logger: logger
+        '''
         self._corpus = corpus_text_input
         self.logger = logger
         
     def generate_simple_markov_chain_novel_text(self , number_of_words_in_sentence=0 , number_of_sentences_per_record=0 , number_of_records=0 ):
+        '''
+        This method generates a simple, randomized extraction of text based upon a Markov model.
+        
+        @param number_of_words_in_sentence: An indicator as to the number of words to generate in each novel sentence.
+        @type number_of_words_in_sentence: int
+        @param number_of_sentences_per_record: An indicator as to the number of sentences per record to generate.
+        @type number_of_sentences_per_record: int
+        @param number_of_records: An indicator as to the total number of records to generate.
+        @type number_of_records: int
+        @return: list
+        '''
         tokens = word_tokenize(self._corpus)
         cache = {}
         words = []
@@ -52,6 +78,13 @@ class TextGenerator(object):
         return words
     
     def __tag_and_parse_corpus(self , corpus=''):
+        '''
+        This is a utility method to aid in the POS tagging a parsing of corpus elements
+        
+        @param corpus: The corpus of text that will be tagged and parsed.
+        @type corpus: str
+        @return: tuple
+        '''
         tag_re = re.compile(r'[*]|--|[^+*-]+')
         tag_set = set()
         symbols = set()
@@ -73,6 +106,17 @@ class TextGenerator(object):
         return cleaned_sentences , list(tag_set) , list(symbols)
     
     def generate_hmm_novel_text(self ,  number_of_words_in_sentence=0 , number_of_sentences_per_record=0 , number_of_records=0 ):
+        '''
+        This is a method that generates novel text using NLTK's HiddenMarkovModelTrainer object
+        
+        @param number_of_words_in_sentence: An indicator as to the number of words to generate in each novel sentence.
+        @type number_of_words_in_sentence: int
+        @param number_of_sentences_per_record: An indicator as to the number of sentences per record to generate.
+        @type number_of_sentences_per_record: int
+        @param number_of_records: An indicator as to the total number of records to generate.
+        @type number_of_records: int
+        @return: list
+        '''
         words = []
         punct_selector = ['. ' , '! ' , '? ']
         punctuation_stop_symbols = dict((ord(char) , None) for char in string.punctuation)
@@ -94,6 +138,18 @@ class TextGenerator(object):
         return words
     
     def generate_context_free_grammar_novel_text(self , number_of_words_in_sentence=0 , number_of_sentences_per_record=0,  number_of_records=0):
+        '''
+        This method utilizes NLTK's Context Free Grammar parser objects to parse an available .*cfg file and generate
+        novel text from it.
+        
+        @param number_of_words_in_sentence: An indicator as to the number of words to generate in each novel sentence.
+        @type number_of_words_in_sentence: int
+        @param number_of_sentences_per_record: An indicator as to the number of sentences per record to generate.
+        @type number_of_sentences_per_record: int
+        @param number_of_records: An indicator as to the total number of records to generate.
+        @type number_of_records: int
+        @return: str
+        '''
         words = []
         punct_selector = ['. ' , '! ' , '? ']
         punctuation_stop_symbols = dict((ord(char) , None) for char in string.punctuation)
@@ -131,12 +187,30 @@ class TextGenerator(object):
         return '. '.join(words)
     
     def generate_direct_text(self , number_of_sentences=0 , number_of_records=0):
+        '''
+        This method generates data by randomly selecting words from the corpus and assembling them into data records.
+        
+        @param number_of_sentences: An indicator as to the number of sentences per record to generate.
+        @type number_of_sentences: int
+        @param number_of_records: An indicator as to the total number of records to generate.
+        @type number_of_records: int
+        @return: list
+        '''
         words=[]
         sentence_tokens = nltk.sent_tokenize(self._corpus)
         words = [random.choice(sentence_tokens) for _ in range(number_of_sentences) for _ in range(number_of_records)]
         return words
     
     def generate_csv(self , data=[] , output_file_name='' , delimiter=''):
+        '''
+        This method generates CSV files from the resulting novel text that is created by one of the methods above.
+        @param data: The records themselves stored in a list of strings
+        @type data: list
+        @param output_file_name: The name of the output file
+        @type output_file_name: str
+        @param delimiter: The delimiter used in the csv file
+        @type delimiter: str
+        '''
         try:
             if len(data) > 0:
                 abs_path = os.path.abspath(output_file_name)

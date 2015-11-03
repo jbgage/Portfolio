@@ -3,12 +3,30 @@ import json
 from elasticsearch import Elasticsearch
 
 class Search(object):
+    '''
+    This class is charged with interfacing with Elasticsearch and parsing the resulting response into 
+    values that are then passed to the gensim models in the 'topics' module.
+    '''
     
     def __init__(self,  propertyObj=None , logger=None):
+        '''
+        Constructor
+        
+        @param propertyObj: The property.PropertyUtil object that is passed which contains all of the properties contained in config/application.conf
+        @type propertyObj: property.PropertyUtil
+        @param logger: logger
+        @type logger: logger
+        '''
         self._property = propertyObj
         self._logger = logger
     
     def get(self , term=''):
+        '''
+        This method retrieves the search results returned by Elasticsearch and parses them into a list.
+        @param term: The search term
+        @type term: str
+        @return: list
+        '''
         documents = []
         try:
             if self._property is not None:

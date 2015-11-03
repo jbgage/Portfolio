@@ -3,8 +3,20 @@ import jsonutil
 import os
 
 class ConfigurationUtil(object):
+    '''
+    This is a utility class used to assemble all of the values contained in the different JSON-based 'model' files
+    under config/
+    '''
     
     def __init__(self, configurationFilePath='' , logger=None):
+        '''
+        Constructor
+        
+        @param configurationFilePath: Path to the main configuration file
+        @type configurationFilePath: str
+        @param logger: logger
+        @type logger: logger
+        '''
         self._configFilePath = configurationFilePath
         self.logger = logger
     

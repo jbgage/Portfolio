@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 from model.daoimpl import DaoImplModel
 from model.daoimplmethod import DaoImplMethodModel
-from parser.config import ConfigJsonParser
-from parser.constant import JsonConstants
 
 class DaoImplObjectJsonParser(object):
+    '''
+    This class is charged with assembling the different values used to generate DAOImpl classes.
+    '''
     
     def __init__(self , configFileObject = None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObject: The configuration object that is passed to this class
+        @type configFileObject: config.ConfigJsonParser
+        @param logger: logger
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObject
         self.__logger = logger
     

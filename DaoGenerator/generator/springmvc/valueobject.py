@@ -4,9 +4,24 @@ from parser.pattern.valueobject import ValueObjectJsonParser
 from parser.constant import JsonConstants
 
 class ValueObjectClassGenerator(object):
+    '''
+    This class is charged to generate the ValueObject class files based upon the corresponding GOF design patter
+    '''
+    
     __open_brace = "{"
     __close_brace = "}"
+    
     def __init__(self , configFileObject = None , deploymentUtil=None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObj: The parser.config.ConfigJsonParser object passed to this class
+        @type configFileObj: parser.config.ConfigJsonParser
+        @param deploymentUtil: The deploy.DeploymentUtil object passed to the Generator
+        @type deploymentUtil:deploy.DeploymentUtil
+        @param logger: The logger object
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObject
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger

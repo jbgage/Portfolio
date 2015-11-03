@@ -1,11 +1,20 @@
 #!/usr/bin/env python
 from model.view import ViewModel
-from parser.config import ConfigJsonParser
-from parser.constant import JsonConstants
 
 class ViewJsonParser(object):
+    '''
+    This class is charged with assembling the data that is used to generate VIEW-centric commands.
+    '''
     
     def __init__(self , configFileObj = None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObject: The configuration object that is passed to this class
+        @type configFileObject: config.ConfigJsonParser
+        @param logger: logger
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__logger = logger
     

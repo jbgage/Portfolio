@@ -1,12 +1,22 @@
 #!/usr/bin/env python
 from model.profile import ProfileModel
 from model.profilemethod import ProfileMethodModel
-from parser.config import ConfigJsonParser
-from parser.constant import JsonConstants
+
 
 class ProfileObjectJsonParser(object):
+    '''
+    This class is charged with assembling the different values used to generate Profile class files.
+    '''
     
     def __init__(self , configFileObj=None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObject: The configuration object that is passed to this class
+        @type configFileObject: config.ConfigJsonParser
+        @param logger: logger
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__logger = logger
     

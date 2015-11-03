@@ -1,11 +1,21 @@
 #!/usr/bin/env python
 from model.storedproc import StoredProcedureModel
-from parser.config import ConfigJsonParser
-from parser.constant import JsonConstants
+
 
 class StoredProcedureJsonParser(object):
+    '''
+    This class is charged with assembling the different values used to generate SQL files that contain stored-procedures.
+    '''
     
     def __init__(self , configFileObj=None , logger=None):
+        '''
+        Constructor
+        
+        @param configFileObject: The configuration object that is passed to this class
+        @type configFileObject: config.ConfigJsonParser
+        @param logger: logger
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__logger = logger
     

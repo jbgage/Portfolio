@@ -1,12 +1,24 @@
 #!/usr/bin/env python
 import os
-from parser.config import ConfigJsonParser
 from parser.constant import JsonConstants
 from parser.sql.view import ViewJsonParser
 
 class SqlViewScriptGenerator(object):
+    '''
+    This class is charged with creating a SQL script that contains CREATE VIEW statements.
+    '''
     
     def __init__(self , configFileObj = None , deploymentUtil=None ,  logger=None):
+        '''
+        Constructor 
+        
+        @param configFileObj: The parser.config.ConfigJsonParser object passed to this class
+        @type configFileObj: parser.config.ConfigJsonParser
+        @param deploymentUtil: The deploy.DeploymentUtil object passed to the Generator
+        @type deploymentUtil:deploy.DeploymentUtil
+        @param logger: The logger object
+        @type logger: logger
+        '''
         self.__configFileObj = configFileObj
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger

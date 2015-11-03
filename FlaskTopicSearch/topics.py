@@ -6,8 +6,20 @@ from gensim import corpora
 from collections import defaultdict
 
 class TopicAnalyzer(object):
+    '''
+    This class is the main topic extraction module of this project. It uses three specific topic extraction techniques: 1) TF-IDF,
+    2) Latent Semantic Indexing and; 3) Latent Dirichilet Allocation
+    '''
     
     def __init__(self, corpusText=[] , logger=None):
+        '''
+        Constructor
+        
+        @param corpusText: The search results from Elasticsearch
+        @type corpusText: list
+        @param logger: logger
+        @type logger: logger
+        '''
         self._corpus = corpusText
         self._stoplist = set('for a of the and to in'.split())
         self._logger = logger
