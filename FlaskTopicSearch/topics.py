@@ -7,8 +7,8 @@ from collections import defaultdict
 
 class TopicAnalyzer(object):
     '''
-    This class is the main topic extraction module of this project. It uses three specific topic extraction techniques: 1) TF-IDF,
-    2) Latent Semantic Indexing and; 3) Latent Dirichilet Allocation
+    This class is the main topic extraction module of this project. It uses three specific topic extraction techniques: 
+    1) TF-IDF, 2) Latent Semantic Indexing and; 3) Latent Dirichlet Allocation
     '''
     
     def __init__(self, corpusText=[] , logger=None):
@@ -190,7 +190,7 @@ class TopicAnalyzer(object):
     
     def get_lda(self , frequency_floor=1 , num_topics=5 , sample_ratio=5):
         '''
-        This method extracts topics using gensim's implementation of Latent Dirichilet Allocation (similar to probabilistic Latent Semantic Indexing).
+        This method extracts topics using gensim's implementation of Latent Dirichlet Allocation (similar to probabilistic Latent Semantic Indexing).
         
         @param frequency_floor: An indicator of the minimum number of occurrences that any word in the corpus can have. 
         @type frequency_floor: int
