@@ -1,0 +1,7 @@
+USE {{ databaseName }};
+GO
+{% for element in tableList %}
+DELETE FROM {{ schemaName }}.{{ element.tableName }};
+GO
+
+{% endfor %}

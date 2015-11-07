@@ -1,0 +1,16 @@
+USE {{ databaseName }};
+GO
+{% for element in tableList %}{% for field in element.fieldsArray %}{% if field.isForeignKeyConstraint %}
+IF OBJECT_ID('{{ schemaName }}.{{ field.foreignKeyName.upper() }}_FK' , 'F') IS NOT NULL
+BEGIN
+	ALTER TABLE {{ schemaName }}.{{ element.tableName }}
+	DROP CONSTRAINT {{ field.foreignKeyName.upper() }}_FK
+END
+
+ALTER TABLE {{ schemaName }}.{{ element.tableName }}
+ADD CONSTRAINT {{ field.foreignKeyName.upper() }}_FK
+FOREIGN KEY ({{ field.foreignKeyName.upper() }})
+REFERENCES {{ field.foreignKeyTable }}.{{ field.foreignKeyName }};
+GO
+
+{% endif %}{% endfor %}{% endfor %}

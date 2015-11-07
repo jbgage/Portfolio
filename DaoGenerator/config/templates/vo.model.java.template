@@ -1,0 +1,22 @@
+package {{ globalNameSpace }}.model;
+import java.util.Serializable;
+
+public class {{ className }} implements Serializable {
+
+	{% for element in fieldsArray %}
+	private {{ element['data-type'] }} {{ element['field-name'] }};
+	{% endfor %}
+
+	public {{ valueObjectName }}(){
+	}
+	
+	{% for element in fieldsArray %}
+	public  {{ element['data-type'] }} get{{ element['field-name']|capitalize }}(){
+		return {{ element['field-name'] }}
+	}
+	
+	public void set{{ element['field-name']|capitalize }}({{ element['data-type'] }} {{ element['field-name'] }}){
+		this.{{ element['field-name'] }} = {{ element['field-name'] }};
+	}
+	{% endfor %}
+}

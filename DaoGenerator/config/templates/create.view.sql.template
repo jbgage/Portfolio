@@ -1,0 +1,27 @@
+USE {{ schemaName }};
+GO
+
+{% for view in viewList  %}
+IF (OBJECT_ID ({{ databaseName }}.{{ view.name }}, V)) IS NOT NULL 
+	DROP VIEW {{ databaseName }}.{{ view.name }}
+GO
+CREATE VIEW {{ databaseName }}.{{ view.name }}
+AS
+	SELECT
+	{% for element in view.selectClause  %}
+		{{ element['select-field']}} {% if loop.index0 < view.selectClause|length - 1 %},{% endif %}		
+	{% endfor %}
+	FROM
+	{% for element in view.fromClause  %}
+		{{ element['from-table-name'] }}
+		{% if loop.index0 < view.fromClause|length - 1 %},{% endif %}
+	{% endfor %}
+	{% if view.whereClause|length > 0  %}
+	WHERE
+		{% for element in view.whereClause  %}
+			{{ element['l-table-name'] }}.{{ element['l-field-name'] }}  {{ element['evaluation'] }}  {{ element['r-table-name'] }}.{{ element['r-field-name'] }} {% if loop.index0 < view.whereClause|length - 1 %}AND{% endif %}
+		{% endfor %};
+	{% endif%}
+GO
+
+{% endfor %}

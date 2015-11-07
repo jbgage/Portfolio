@@ -1,0 +1,25 @@
+USE {{ schemaName }};
+GO
+
+{% for element in tableList %}{% for field in element.fieldsArray %}{% if field.isForeignKeyConstraint %}
+IF OBJECT_ID('{{ schemaName }}.{{ field.foreignKeyName.upper() }}_FK' , 'F') IS NOT NULL
+BEGIN
+	ALTER TABLE {{ schemaName }}.{{ element.tableName }}
+	DROP CONSTRAINT {{ field.foreignKeyName.upper() }}_FK
+END
+{% endif %}{% endfor %}
+IF OBJECT_ID('{{ schemaName }}.{{ element.tableName }}' , 'U') IS NOT NULL
+BEGIN
+	DROP TABLE {{ schemaName }}.{{ element.tableName }}
+END;
+GO
+
+{% endfor %}
+{% for element in viewList %}
+IF OBJECT_ID('{{ schemaName }}.{{ element.viewName }}' , 'V') IS NOT NULL
+BEGIN
+	DROP VIEW {{ schemaName }}.{{ element.viewName }}
+END
+GO
+
+{% endfor  %}

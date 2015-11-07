@@ -1,0 +1,64 @@
+USE {{ schemaName }};
+GO
+
+{% for element in storedProcList %}
+IF (OBJECTID({{ schemaName }}.{{ element.name }} , 'P')) IS NOT NULL
+	DROP PROCEDURE {{ schemaName }}.{{ element.name }}
+GO
+CREATE PROCEDURE {{ schemaName }}.{{ element.name }}
+	{% for field in element.inputVariables %}
+		{{ field['field-name'] }} {{ field['data-type'] }} {% if field['data-type'].upper() == 'VARCHAR' %} ({{ field['length'] }}) {% endif %} {% if loop.index0 < element.inputVariables|length - 1 %},{% endif %}
+	{% endfor %}
+AS
+	BEGIN
+		{% if element.storedProcedureType.upper() == 'SELECT' %}
+			SELECT
+				{% for field in element.selectStatementFields %}
+					{{ field['field-name'] }} {% if loop.index0 < element.selectStatementFields|length - 1 %},{% endif %}
+				{% endfor %}
+			FROM
+				{% if element.viewName is not none or element.viewName != '' %} {{ schemaName }}.{{ element.viewName }} {% elif element.tableName is not none or element.tableName != '' %} {{schemaName }}.{{ element.tableName }} {% endif %}
+			{% if element.whereClause is not none and element.whereClause|length > 0 %}
+			WHERE
+				{% for field in element.whereClause  %}
+					{{ field['field-name'] }} = {{ field['input-variable-name'] }} {% if loop.index0 < element.whereClause|length - 1 %} AND {% endif %}
+				{% endfor %}
+			{% endif %}
+		{% elif element.storedProcedureType.upper() == 'INSERT' %}
+			{% if element.insertStatementFields|length > 0 %}
+			INSERT INTO {{ schemaName }}.{{ element.tableName }}(
+				{% for field in element.insertStatementFields %}
+					{{ field['field-name'] }} {% if loop.index0 < element.insertStatementFields|length - 1 %},{% endif  %}
+				{% endfor %}
+			) VALUES (
+				{% for field in element.inputVariables  %}
+					{{ field['field-name'] }} {%if loop.index0 < element.inputVariables|length - 1  %},{% endif %}
+				{% endfor  %}
+			);
+			{% endif %}
+		{% elif element.storedProcedureType.upper() == 'UPDATE' %}
+			{% if element.updateStatementFields|length > 0 %}
+			UPDATE {{ schemaName }}.{{ element.tableName }} 
+			SET
+				{% for field in element.updateStatementFields %}
+					{{ field['field-name'] }} = {{ field['input-variable-name'] }} {% if loop.index0 < element.updateStatementFields|length - 1 %} , {% endif %}
+				{% endfor %}
+			{% if element.whereClause|length > 0 %}
+			WHERE
+			{% for field in element.whereClause %}
+					{{ field['field-name'] }} = {{ field['input-variable-name'] }} {% if loop.index0 < element.whereClause|length - 1 %} , {% endif %}
+			{% endfor %}
+			{% endif %}
+			{% endif %}	
+		{% elif element.storedProcedureType.upper() == 'DELETE' %}
+			DELETE FROM {{ schemaName }}.{{ element.tableName }} 
+			{% if element.whereClause|length > 0 %}
+			WHERE
+			{% for field in element.whereClause %}
+					{{ field['field-name'] }} = {{ field['input-variable-name'] }} {% if loop.index0 < element.whereClause|length - 1 %} AND {% endif %}
+			{% endfor %}
+			{% endif %}
+		{% endif %}
+	END;
+GO
+{% endfor %}

@@ -1,0 +1,14 @@
+USE {{ databaseName }};
+GO
+
+CREATE {{ schemaName }};
+GO
+
+{% for table in tableList  %}
+CREATE TABLE {{ table.tableName }}(
+		{% for element in table.fieldsArray %}
+			{{ element.fieldName.upper() }} {% if element.dataType.upper() == 'VARCHAR' %} {{ element.dataType }} ({{ element.length }}) {% else %} {{ element.dataType.upper() }} {% endif %} {% if element.isPrimaryKey  %} PRIMARY KEY {% endif %} {% if element.autoIncrement %} IDENTITY {% endif %} {% if loop.index0 < table.fieldsArray|length - 1 %},{% endif %}
+		{% endfor %}
+{% endfor  %}
+);
+GO

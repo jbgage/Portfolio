@@ -1,0 +1,53 @@
+package {{ globalNameSpace }}.persistence.dao.daoImpl;
+import java.util.List;
+import java util.LinkedList;
+import java.util.HashMap;
+import javax.annotation.Resource;
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import {{ globalNameSpace }}.model.*;
+import {{ globalNameSpace }}.persistence.dao.{{ daoName }};
+
+/**************************************************
+{{ classComment }}
+***************************************************/
+
+public class {{ className }} implements {{ daoName }} {
+	
+	private Logger logger = LoggerFactory.getLogger({{ className }}.class.getName();
+	
+	@Autowired
+    @Resource(name="jdbcTemplate")
+    private JdbcTemplate jdbcTemplate; 
+        
+    @Autowired 
+    @Resource(name="dataSource") 
+    private DataSource dataSource;   
+    
+    public {{ className }} (){
+    }
+    
+    {% for element in methodList  %}
+    
+    public {% if element.returnType == 'list' %}List {% if element.valueObjectType != '' %}<{{element.valueObjectType}}>{% endif %}{% elif element.returnType == 'vo'%} {{ element.valueObjectType }}{% else %} {{element.returnType }} {% endif %} {{element.methodName}} ({% for field in element.methodList %} {{ field['data-type'] }} {{ field['variable-name'] }} {% if loop.index0 < element.methodList|length - 1 %} , {% endif %}{% endfor %}) {
+    	{% if element.returnType == 'list' %}List {% if element.valueObjectType != '' %}<{{element.valueObjectType}}>{% endif %} list = null;{% elif element.returnType == 'vo' %}{{ element.valueObjectName }} vo = new {{ element.valueObjectName }}();{% elif element.returnType == 'int' %}	int returnId = 0;	{% endif %}
+    	try{
+    		list = new List{% if element.valueObjectType != '' %}<{{element.valueObjectType}}>{% endif %}();
+    		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)		
+    											.withProcedureName({{ element.storedProcedureName }})
+    											.returningResultSet({{ element.valueObjectType }} , BeanPropertyRowMapper.newInstance({{ element.valueObjectType }}.class));
+    		Map map = jdbcCall.execute(new HashMap<String , Object>(0));
+    		list = (List) m.get("{{ element.valueObjectType }}");
+    	} catch(Exception ex){
+    		logger.logger("******************* {{ className }}.{{element.methodName}}: Error occurred - {0}" , ex.getMessage());
+    	}
+    	{% if element.returnType == 'list' %}return list;{% elif element.returnType == 'vo' %}return vo;{% elif element.returnType == 'int' %}return returnId;{% endif %}
+    }
+ {% endfor %}
+
+}

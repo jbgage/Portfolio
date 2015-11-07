@@ -1,0 +1,13 @@
+package {{ globalNameSpace }}.persistence.dao;
+import java.util.List;
+import {{ globalNameSpace }}.model;
+
+/****************************************************************
+{{ interfaceComment }}
+*****************************************************************/
+
+public interface {{ interfaceName }} {
+	{% for element in methodList  %}
+	public {{ element.returnType }} {{ element.methodName }} ({% for field in element.variableList  %} {{ field.variableName }}  {% if loop0.index < element.variableList|length - 1 %} , {% endif %}{% endfor %});
+	{% endfor %}
+}
