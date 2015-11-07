@@ -1,0 +1,18 @@
+USE sampleDB;
+GO
+
+CREATE sample;
+GO
+
+
+CREATE TABLE SECTION(
+		
+			SECTIONID  INT   PRIMARY KEY   IDENTITY  ,
+		
+			NAME  VARCHAR (50)    ,
+		
+			FORMTYPEID  INT    
+		
+
+);
+GO
