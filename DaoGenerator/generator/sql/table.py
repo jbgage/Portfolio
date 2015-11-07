@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 import os
-from parser.sql.schema import SchemaJsonParser
-from parser.constant import JsonConstants
+from jinja2 import Environment , FileSystemLoader
+from util.constant import JsonConstants
+from model.table import TableModel
+from model.tablefield import TableFieldModel
 
 class SqlTableScriptGenerator(object):
     '''
-    This class is charged with creating a SQL script that contains a series of CREATE TABLE statements.
+    This class is charged with creating a SQL script from the underlying template that
+    contains a series of CREATE TABLE statements.
     '''
-    
-    __open_brace = '('
-    __close_brace = ')'
-    __end_statement = ';'
-    
+            
     def __init__(self , configFileObj=None , deploymentUtil=None , logger=None):
         '''
         Constructor
@@ -27,87 +26,71 @@ class SqlTableScriptGenerator(object):
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
         
-    def __using_database_block(self , database_name , schema_name):
-        sql_output = ''
-        ls = os.linesep
+    def listOfTables(self):
+        '''
+        This method converts the JSON-derived values for the list of tables into a list of model.TableModel objects
+        
+        @return: list
+        '''
+        table_model_list = []
         try:
-                sql_output = 'USE {0};{1}'.format(database_name , ls)
-                sql_output += 'GO' + ls
-                sql_output += 'CREATE SCHEMA {0};'.format(schema_name) + ls
-        except Exception , err:
-            self.__logger.error( '******** SqlTableScriptGenerator.__using_database_block: Exception occurred - Message = {0}'.format(str(err)))
-        return sql_output
+            for tableObj in self.__configFileObj.sqlTables():
+                    tablemodel = TableModel()
+                    tablemodel.tableName = tableObj['name']
+                    tablemodel.fieldsArray = self.listOfTableField(tableObj['fields'])
+                    table_model_list.append(tablemodel)
+        except IOError, ioerr:
+            self.__logger.error( '***** SqlTableScriptGenerator.listOfTables: IO Error occured - {0}'.format(str(ioerr)))
+        except Exception, err:
+            self.__logger.error( '***** SqlTableScriptGenerator.listOfTables: Error occured - {0}'.format(str(err)))
+        return table_model_list
     
-    def __generate_create_table_header(self , tableName , tab_char):
-        sql_output = ''
-        ls = os.linesep
-        try:
-            sql_output += tab_char +  'CREATE TABLE {0} {1}'.format(tableName , ls)
-        except Exception , err:
-            self.__logger.error( '******** SqlTableScriptGenerator.__generate_create_table_header: Exception occurred - Message = {0}'.format(str(err)))
-        return sql_output
-    
-    def __generate_table_field_contents(self , fieldArray  , tab_char):
-        ls = os.linesep
-        sql_output = ''
-        fields_definition = ''
-        try:
-            if not fieldArray is None:
-                if len(fieldArray) > 0:
-                    sql_output += tab_char + self.__open_brace + ls
-                    for index , element in enumerate(fieldArray):
-                        fields_definition += tab_char + tab_char + element.fieldName.upper() + ' '
-                        if (element.dataType.upper() == 'VARCHAR'):
-                            fields_definition += ' {0} ({1}) '.format(element.dataType.upper() , element.length)
-                        else:
-                            fields_definition +=  ' {0} '.format(element.dataType.upper())
-                        if element.isPrimaryKey == True:
-                            fields_definition += ' PRIMARY KEY '
-                        if element.autoIncrement == True:
-                            fields_definition += ' IDENTITY '
-                        if index < len(fieldArray) - 1:
-                            fields_definition += ',' + ls
-                        else:
-                            fields_definition += ls
-                    sql_output += fields_definition
-                    sql_output += tab_char + self.__close_brace + ls
-        except Exception , err:
-            self.__logger.error( '******** SqlTableScriptGenerator.__generate_table_field_contents: Exception occured - Message = {0}'.format(str(err)))
-        return sql_output
-    
-    def __assemble_components(self , tableName , fieldArr , tab_char):
-        component_definition = ''
-        component_definition += self.__generate_create_table_header(tableName , tab_char)
-        component_definition += self.__generate_table_field_contents(fieldArr , tab_char)
-        return component_definition
-    
-    def createSqlStatement(self):
-        table_parser = SchemaJsonParser(self.__configFileObj , self.__logger)
-        table_list = []
-        ls = os.linesep
-        tab_char = '\t'
-        sql_output = ''
-        try:
-            if not table_parser is None:
-                table_list = table_parser.listOfTables()
-                sql_output += self.__using_database_block(self.__configFileObj.databaseName() , self.__configFileObj.databaseSchemaName())
-                if not table_list is None and len(table_list) > 0:
-                    for element in table_list:
-                        sql_output += self.__assemble_components(element.tableName, element.fieldsArray , tab_char)
-                    sql_output += 'GO;'
-        except Exception , error:
-            self.__logger.error( '***** SqlTableScriptGenerator.createSqlStatement: Error occurred - {0}'.format(str(error)))
-        return sql_output
-    
+    def listOfTableField(self , method_list=[]):
+        '''
+        This method further decomposes the table fields into a list of model.TableFieldModel objects
+        
+        @param method_list: This is the list of fields from the model.TableModel.fieldsArray object
+        @type method_list: list
+        @return: list
+        '''
+        tableMethodList = []
+        for element in method_list:
+            field = TableFieldModel()
+            field.fieldName = element['field-name']
+            field.dataType = element['data-type']
+            field.length = element['length']
+            field.isPrimaryKey = element['is-primary-key']
+            field.autoIncrement = element['auto-increment']
+            field.isForeignKeyConstraint = element['is-foreign-key-constraint']
+            field.foreignKeyName = element['foreign-key-name']
+            field.foreignKeyTable = element['foreign-key-table']
+            tableMethodList.append(field)
+        return tableMethodList
+        
     def createSqlFile(self):
-        template_sql_file_name = '2-CreateSchemaTables'
+        '''
+        This method assembles all of the values that comprise the CREATE TABLE SQL script and renders the corresponding Jinja template.
+        It then writes this file to the operating system per the underlying directory specifications.
+        '''
+        template_sql_file_name = ''
         sql_deployment_directory = ''
         sql_file_name = ''
+        tableList = []
         try:
-            sql_deployment_directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYSQL)
-            self.__deploymentUtil.createDeploymentDirectory(sql_deployment_directory)
-            sql_file_name = '{0}/{1}.sql'.format(sql_deployment_directory , template_sql_file_name)
-            with open(sql_file_name , 'w+') as sql_file_obj:
-                sql_file_obj.write(self.createSqlStatement())
+            if self.__configFileObj is not None:
+                sql_deployment_directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYSQL)
+                self.__deploymentUtil.createDeploymentDirectory(sql_deployment_directory)
+                template_sql_file_name = self.__configFileObj.createTablesScriptFileName()
+                sql_file_path = sql_deployment_directory +  template_sql_file_name
+                tableList = self.listOfTables()
+                if len(tableList) > 0:
+                    template_directory = os.path.abspath(self.__configFileObj.templateDirectoryName())
+                    env = Environment(loader=FileSystemLoader(template_directory))
+                    template = env.get_template(self.__configFileObj.createTablesTemplateFileName())
+                    template.stream({'schemaName':self.__configFileObj.databaseSchemaName() , 
+                                     'databaseName':self.__configFileObj.databaseName() , 
+                                     'tableList':tableList}).dump(sql_file_path)  
         except IOError , ioerror:
-            self.__logger.error( '***** SqlTableScriptGenerator.createSqlFile: Error occurred - {0}'.format(str(ioerror)))
+            self.__logger.error( '***** SqlTableScriptGenerator.createSqlFile: IOError occurred - {0}'.format(str(ioerror)))
+        except Exception , error:
+            self.__logger.error( '***** SqlTableScriptGenerator.createSqlFile: Error occurred - {0}'.format(str(error)))

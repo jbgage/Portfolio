@@ -1,6 +1,8 @@
 import os
-from parser.constant import JsonConstants
-from parser.sql.schema import SchemaJsonParser
+from util.constant import JsonConstants
+from model.table import TableModel
+from model.tablefield import TableFieldModel
+from jinja2 import Environment , FileSystemLoader
 
 class DeleteDataScriptGenerator(object):
     '''
@@ -22,47 +24,65 @@ class DeleteDataScriptGenerator(object):
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
         
-    def __using_database_block(self , database_name):
-        sql_output = ''
-        ls = os.linesep
+    def listOfTables(self):
+        '''
+        This method converts the JSON dictionary of SQL TABLE properties into a list of model.TableModel objects.
+        
+        @return: list
+        '''
+        table_model_list = []
         try:
-            sql_output = 'USE {0};{1}'.format(database_name , ls)
-            sql_output += 'GO' + ls 
-            sql_output += ls
-        except Exception , err:
-            self.__logger.error( '******** DeleteDataScriptGenerator.__using_block: Exception occurred - Message = {0}'.format(str(err)))
-        return sql_output
+            for tableObj in self.__configFileObj.sqlTables():
+                    tablemodel = TableModel()
+                    tablemodel.tableName = tableObj['name']
+                    table_model_list.append(tablemodel)
+        except IOError, ioerr:
+            self.__logger.error( '***** DeleteDataScriptGenerator.listOfTables: IO Error occured - {0}'.format(str(ioerr)))
+        except Exception, err:
+            self.__logger.error( '***** DeleteDataScriptGenerator.listOfTables: Error occured - {0}'.format(str(err)))
+        return table_model_list
     
-    def __generate_delete_statement(self , schema_name , table_name):
-        sql_output = ''
-        ls = os.linesep
+    def listOfTableField(self , method_list):
+        '''
+        This method further decomposes the table fields into a list of model.TableFieldModel objects
+        
+        @param method_list: This is the list of fields from the model.TableModel.fieldsArray object
+        @type method_list: list
+        @return: list
+        '''
+        tableMethodList = []
+        for element in method_list:
+            field = TableFieldModel()
+            field.fieldName = element['field-name']
+            field.dataType = element['data-type']
+            field.length = element['length']
+            field.isPrimaryKey = element['is-primary-key']
+            field.autoIncrement = element['auto-increment']
+            field.isForeignKeyConstraint = element['is-foreign-key-constraint']
+            field.foreignKeyName = element['foreign-key-name']
+            field.foreignKeyTable = element['foreign-key-table']
+            tableMethodList.append(field)
+        return tableMethodList
+        
+    def createSqlFile(self):
+        '''
+        This method loads the template from the util.ConfigurationProperties object and creates a 'DELETE' SQL script.
+        '''
+        tableList = []
         try:
-            sql_output += 'DELETE FROM {0}.{1};{2}'.format(schema_name , table_name , ls) 
-            sql_output += 'GO' + ls
-            sql_output += ls
-        except Exception , err:
-            self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
-        return sql_output
-    
-    def assemble_components(self , database_name , schema_name , table_list):
-        sql_output = ''
-        try:
-            sql_output += self.__using_database_block(database_name)
-            for element in table_list:
-                sql_output += self.__generate_delete_statement(schema_name, element.tableName)
-        except Exception , err:
-            self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
-        return sql_output
-    
-    def generateSqlScript(self):
-        sql_file_name = 'DeleteAllDataFromTables.sql'
-        table_list = []
-        tableParser = SchemaJsonParser(self.__configFileObj, self.__logger)
-        try:
-            sql_directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYSQL)
-            self.__deploymentUtil.createDeploymentDirectory(sql_directory)
-            with open(sql_directory + sql_file_name , 'w+') as sql_file:
-                table_list = tableParser.listOfTables()
-                sql_file.write(self.assemble_components(self.__configFileObj.databaseName(), self.__configFileObj.databaseSchemaName(), table_list))
-        except Exception , err:
-            self.__logger.error( '******** DeleteDataScriptGenerator.__generate_delete_statement: Exception occurred - Message = {0}'.format(str(err)))
+            sql_deployment_directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYSQL)
+            self.__deploymentUtil.createDeploymentDirectory(sql_deployment_directory)
+            template_sql_file_name = self.__configFileObj.deleteAllDataFromTablesAndViewsScriptFileName()
+            template_directory = os.path.abspath(self.__configFileObj.templateDirectoryName())
+            sql_file_path = sql_deployment_directory +  template_sql_file_name
+            tableList = self.listOfTables()
+            if len(tableList) > 0:
+                env = Environment(loader=FileSystemLoader(template_directory))
+                template = env.get_template(self.__configFileObj.deleteAllDataFromTablesTemplateFileName())
+                template.stream({'schemaName':self.__configFileObj.databaseSchemaName() , 
+                                 'databaseName':self.__configFileObj.databaseName() , 
+                                 'tableList':tableList}).dump(sql_file_path)  
+        except IOError , ioerror:
+            self.__logger.error( '***** DeleteDataScriptGenerator.createSqlFile: IOError occurred - {0}'.format(str(ioerror)))
+        except Exception , error:
+            self.__logger.error( '***** DeleteDataScriptGenerator.createSqlFile: Error occurred - {0}'.format(str(error)))

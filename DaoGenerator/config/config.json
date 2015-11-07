@@ -1,5 +1,5 @@
 {
-    "databaseName": "sample", 
+    "databaseName": "sampleDB", 
     "databaseSchemaName": "sample", 
     "directories": {
         "config": "config/", 
@@ -29,5 +29,36 @@
         }, 
         "profile": "profile-model.json", 
         "valueObject": "vo-model.json"
+    },
+    "templates":{
+    	"templateDirectory":"config/templates/",
+    	"database":{
+    		"createViews":"create.view.sql.template",
+    		"createTables":"create.table.sql.template",
+    		"alterTables":"alter.table.sql.template",
+    		"storedProcedures":"create.stored.procedures.sql.template",
+    		"dropTablesAndViews":"drop.tables.and.views.sql.template",
+    		"deleteAllDataFromTables":"delete.all.data.from.tables.sql.template"
+    	},
+    	"persistence":{
+    		"dao":"dao.java.template",
+    		"daoImpl":"dao.impl.java.template"    		
+    	},
+    	"valueObject":"vo.model.java.template"
+    },
+    "outputFiles":{
+    	"sql":{
+    		"createTablesScript":"1-CreateTables.sql",
+    		"alterTablesScript":"2-AlterTables.sql",
+    		"createViewsScript":"3-CreateViews.sql",
+    		"createStoredProceduresScript":"4-CreateStoredProcedure.sql",
+    		"deleteValuesFromAllTablesScript":"5-DeleteAllRecords.sql",
+    		"dropTablesAndViewsScript":"6-DropTablesAndViews.sql"
+    	},
+    	"java":{
+    		"daoTemplateJavaFileName":"{{ modelName }}.java",
+    		"daoImplTemplateJavaFileName":"{{ modelName }}.java",
+    		"valueObjectTemplateFileName":"{{ modelName }}.java"    		
+    	}
     }
 }

@@ -1,6 +1,8 @@
 import os
-from parser.constant import JsonConstants
-from parser.sql.schema import SchemaJsonParser
+from util.constant import JsonConstants
+from model.table import TableModel
+from model.tablefield import TableFieldModel
+from jinja2 import Environment , FileSystemLoader
 
 class AlterTableScriptGenerator(object):
     '''
@@ -22,62 +24,66 @@ class AlterTableScriptGenerator(object):
         self.__deploymentUtil = deploymentUtil
         self.__logger = logger
         
-    def __use_database_block(self , database_name):
-        sql_output = ''
-        ls = os.linesep
+    def listOfTables(self):
+        '''
+        This method converts the JSON-derived values for the list of tables into a list of model.TableModel objects
+        
+        @return: list
+        '''
+        table_model_list = []
         try:
-            sql_output += 'USE {0};{1}'.format(database_name , ls)
-            sql_output += 'GO' + ls
-        except Exception , error:
-            self.__logger.error( '******* AlterTableScriptGenerator.__use_database_block: Error occurred - {0}'.format( str(error) ))
-        return sql_output
+            for tableObj in self.__configFileObj.sqlTables():
+                    tablemodel = TableModel()
+                    tablemodel.tableName = tableObj['name']
+                    tablemodel.fieldsArray = self.listOfTableField(tableObj['fields'])
+                    table_model_list.append(tablemodel)
+        except IOError, ioerr:
+            self.__logger.error( '***** AlterTableScriptGenerator.listOfTables: IO Error occured - {0}'.format(str(ioerr)))
+        except Exception, err:
+            self.__logger.error( '***** AlterTableScriptGenerator.listOfTables: Error occured - {0}'.format(str(err)))
+        return table_model_list
     
-    def __if_object_exists_block(self , schema_name , table_name ,  constraint_name):
-        sql_output = ''
-        ls = os.linesep
-        try:
-            sql_output += 'IF  (OBJECT_ID(\'{0}.{1}\' , \'F\')) IS NOT NULL{2}'.format(schema_name , constraint_name, ls)
-            sql_output += 'BEGIN' + ls
-            sql_output += '\t ALTER TABLE {0}.{1}{2}'.format(schema_name , table_name , ls)
-            sql_output += '\t DROP CONSTRAINT {0};{1}'.format(constraint_name , ls)
-            sql_output += 'END;' + ls
-            sql_output += 'GO' + ls
-        except Exception, error:
-            self.__logger.error( '******* AlterTableScriptGenerator.__if_object_exists_block: Error occurred - {0}'.format( str(error) ))
-        return sql_output
-    
-    def __create_alter_table_statement(self , schema_name ,  table_name , constraint_name , foreign_key_name , foreign_key_table):
-        alter_table_stmt = ''
-        ls = os.linesep
-        alter_table_stmt += 'ALTER TABLE {0}.{1}'.format(schema_name , table_name) + ls
-        alter_table_stmt += 'ADD CONSTRAINT {0}'.format(constraint_name) + ls
-        alter_table_stmt += 'FOREIGN KEY({0})'.format(foreign_key_name) + ls
-        alter_table_stmt += 'REFERENCES {0}.{1}({2})'.format(schema_name , foreign_key_table  , foreign_key_name) + ls
-        alter_table_stmt += 'GO' + ls
-        return alter_table_stmt
-    
-    def assembleComponents(self , schema_name , table_name , field_list):
-        assembled_components = ''
-        ls = os.linesep
-        for element in field_list:
-            if element.isForeignKeyConstraint is True:
-                constraint_name = ''
-                constraint_name = '{0}_{1}_FK'.format(table_name.upper() , element.foreignKeyName.upper())
-                assembled_components += self.__if_object_exists_block(schema_name , table_name, constraint_name)
-                assembled_components += self.__create_alter_table_statement(schema_name , table_name, constraint_name, element.foreignKeyName, element.foreignKeyTable)
-                assembled_components += ls
-        return assembled_components
-    
-    def generateAlterTableScript(self):
-        sql_file_name = '3-AlterSchemaTables'
-        tableParser = SchemaJsonParser(self.__configFileObj , self.__logger)
-        alterGen = AlterTableScriptGenerator(self.__configFileObj , self.__logger)
+    def listOfTableField(self , method_list):
+        '''
+        This method further decomposes the table fields into a list of model.TableFieldModel objects
+        
+        @param method_list: This is the list of fields from the model.TableModel.fieldsArray object
+        @type method_list: list
+        @return: list
+        '''
+        tableMethodList = []
+        for element in method_list:
+            field = TableFieldModel()
+            field.fieldName = element['field-name']
+            field.dataType = element['data-type']
+            field.length = element['length']
+            field.isPrimaryKey = element['is-primary-key']
+            field.autoIncrement = element['auto-increment']
+            field.isForeignKeyConstraint = element['is-foreign-key-constraint']
+            field.foreignKeyName = element['foreign-key-name']
+            field.foreignKeyTable = element['foreign-key-table']
+            tableMethodList.append(field)
+        return tableMethodList
+        
+    def createSqlFile(self):
+        '''
+        This method loads the template from the util.ConfigurationProperties object and creates an 'ALTER TABLE' SQL script.
+        '''
         tableList = []
-        tableList = tableParser.listOfTables()
-        file_directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYSQL)
-        self.__deploymentUtil.createDeploymentDirectory(file_directory)
-        file_name = sql_file_name + '.sql'
-        with open(file_directory + file_name , 'w+') as alter_file_obj:
-            alter_file_obj.write(self.__use_database_block(self.__configFileObj.databaseName()))
-            for element in tableList:
-                alter_file_obj.write( alterGen.assembleComponents(self.__configFileObj.databaseSchemaName(), element.tableName , element.fieldsArray))
+        try:
+            sql_deployment_directory = self.__configFileObj.deploymentDirectory(JsonConstants.DEPLOYSQL)
+            self.__deploymentUtil.createDeploymentDirectory(sql_deployment_directory)
+            template_sql_file_name = self.__configFileObj.alterTableScriptFileName()
+            template_directory = os.path.abspath(self.__configFileObj.templateDirectoryName())
+            sql_file_path = sql_deployment_directory +  template_sql_file_name
+            tableList = self.listOfTables()
+            if len(tableList) > 0:
+                env = Environment(loader=FileSystemLoader(template_directory))
+                template = env.get_template(self.__configFileObj.alterTablesTemplateFileName())
+                template.stream({'schemaName':self.__configFileObj.databaseSchemaName() , 
+                                 'databaseName':self.__configFileObj.databaseName() , 
+                                 'tableList':tableList}).dump(sql_file_path)  
+        except IOError , ioerror:
+            self.__logger.error( '***** AlterTableScriptGenerator.createSqlFile: IOError occurred - {0}'.format(str(ioerror)))
+        except Exception , error:
+            self.__logger.error( '***** AlterTableScriptGenerator.createSqlFile: Error occurred - {0}'.format(str(error)))                

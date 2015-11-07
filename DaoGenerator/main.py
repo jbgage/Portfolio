@@ -2,9 +2,8 @@
 import logging
 import sys
 import os
-from util.configutil import ConfigurationUtil
 from util.deployment import DeploymentUtil
-from parser.config import ConfigJsonParser
+from util.config import ConfigurationProperties
 from generator.springmvc.valueobject import ValueObjectClassGenerator
 from generator.springmvc.dao import DaoClassGenerator
 from generator.springmvc.daoimpl import DaoImplClassGenerator
@@ -20,8 +19,7 @@ from optparse import OptionParser
 def main(args):
     fileConfig('config/logging.cfg')
     logger = logging.getLogger(__name__)
-    configUtil = ConfigurationUtil('config/config.json' , logger)
-    config = ConfigJsonParser(configUtil.createConfigurationObject() , logger)
+    config = ConfigurationProperties(configurationFilePath='config/config.json' , logger=logger)
     deploy = DeploymentUtil(logger)
     parser = OptionParser()
     parser.add_option("-m" , "--mode" , dest = "mode" , help="Mode of operations.")
@@ -42,15 +40,15 @@ def main(args):
         elif options.mode == 'generate-alter-table-sql':
             logger.info('Generating alter table sql scripts...')
             alterSql = AlterTableScriptGenerator(config , deploy , logger)
-            alterSql.generateAlterTableScript()
+            alterSql.createSqlFile()
         elif options.mode == 'generate-delete-table-sql':
             logger.info('Generating delete all data in tables sql scripts...')
             deleteData = DeleteDataScriptGenerator(config , deploy , logger)
-            deleteData.generateSqlScript() 
+            deleteData.createSqlFile() 
         elif options.mode == 'generate-drop-table-sql':
             logger.info('Generating drop table sql scripts...')
             dropSql = DropTableViewGenerator(config , deploy ,logger)
-            dropSql.generateSqlScript()
+            dropSql.createSqlFile()
         elif options.mode == 'generate-value-objects':
             logger.info('Generating ValueObject java files...')
             voGen = ValueObjectClassGenerator(config , deploy ,logger)   
@@ -63,6 +61,30 @@ def main(args):
             logger.info('Generating DAOImpl java files...')
             daoImplGen = DaoImplClassGenerator(config , deploy ,logger)
             daoImplGen.generateClassFiles()
-    
+        elif options.mode == 'all':
+            logger.info('Generating table sql scripts...')
+            tableSql = SqlTableScriptGenerator(config , deploy ,logger)
+            tableSql.createSqlFile()
+            logger.info('Generating view sql scripts...')
+            viewSql = SqlViewScriptGenerator(config , deploy ,logger)
+            viewSql.createSqlFile()  
+            logger.info('Generating stored procedure scripts...')
+            spGen = SqlStoredProcedureGenerator(config , deploy ,logger)
+            spGen.createSqlFile()
+            logger.info('Generating alter table sql scripts...')
+            alterSql = AlterTableScriptGenerator(config , deploy , logger)
+            alterSql.createSqlFile()
+            logger.info('Generating delete all data in tables sql scripts...')
+            deleteData = DeleteDataScriptGenerator(config , deploy , logger)
+            deleteData.createSqlFile() 
+            logger.info('Generating ValueObject java files...')
+            voGen = ValueObjectClassGenerator(config , deploy ,logger)   
+            voGen.generateClassFiles()
+            logger.info('Generating DAO interface java files...')
+            daoGen = DaoClassGenerator(config , deploy ,logger)
+            daoGen.generateInterfaceFiles()
+            logger.info('Generating DAOImpl java files...')
+            daoImplGen = DaoImplClassGenerator(config , deploy ,logger)
+            daoImplGen.generateClassFiles()
 if __name__ == '__main__':
     main(sys.argv)
