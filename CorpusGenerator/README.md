@@ -8,10 +8,10 @@ The intent is to create a corpus of novel text based upon running training sampl
 
 | Engine | Description | Comments |
 |--------|-------------|----------|
-| `direct`| Directly access text from the file-system | * Not fully tested * |
+| `direct`| Directly access text from the file-system | *Not fully tested* |
 | `hiddenmarkovmodel` | Uses the NLTK's HiddenMarkovModelTrainer object to sample text | Requires NLTK to be fully installed |
-| `simplifiedmarkovchain` | A simplified Markov implementation to randomly select text | * Not fully tested * |
-| `cfg`  | Generate novel text from a context free grammar | * Requires NLTK to be installed; this functionality has also not been fully tested*|
+| `simplifiedmarkovchain` | A simplified Markov implementation to randomly select text | *Not fully tested* |
+| `cfg`  | Generate novel text from a context free grammar | *Requires NLTK to be installed; this functionality has also not been fully tested*|
 
 
 I've been heavily involved in a lot of Apache Lucene-based search engine work in the past and thought Elasticsearch would be a great search store to index these novel sentence-based corpora through.
