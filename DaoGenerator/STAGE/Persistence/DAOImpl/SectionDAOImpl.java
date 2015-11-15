@@ -37,7 +37,7 @@ public class SectionDAOImpl implements SectionDAO {
     public List <SectionModel> GetSectionsByTypeId () {
     	List <SectionModel> list = null;
     	try{
-    		list = new List<SectionModel>();
+    		list = new LinkedList<SectionModel>();
     		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)		
     											.withProcedureName(sample.SelectSectionsByTypeId)
     											.returningResultSet(SectionModel , BeanPropertyRowMapper.newInstance(SectionModel.class));

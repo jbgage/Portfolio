@@ -7,7 +7,7 @@ public class {{ className }} implements Serializable {
 	private {{ element['data-type'] }} {{ element['field-name'] }};
 	{% endfor %}
 
-	public {{ valueObjectName }}(){
+	public {{ className }}(){
 	}
 	
 	{% for element in fieldsArray %}

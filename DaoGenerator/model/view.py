@@ -8,11 +8,11 @@ class ViewModel(object):
         self._whereClause = whereClause
     
     @property
-    def name(self):
+    def viewName(self):
         return self._name
     
-    @name.setter
-    def name(self , value):
+    @viewName.setter
+    def viewName(self , value):
         self._name = value
     
     @property

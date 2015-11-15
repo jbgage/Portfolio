@@ -37,7 +37,7 @@ public class {{ className }} implements {{ daoName }} {
     public {% if element.returnType == 'list' %}List {% if element.valueObjectType != '' %}<{{element.valueObjectType}}>{% endif %}{% elif element.returnType == 'vo'%} {{ element.valueObjectType }}{% else %} {{element.returnType }} {% endif %} {{element.methodName}} ({% for field in element.methodList %} {{ field['data-type'] }} {{ field['variable-name'] }} {% if loop.index0 < element.methodList|length - 1 %} , {% endif %}{% endfor %}) {
     	{% if element.returnType == 'list' %}List {% if element.valueObjectType != '' %}<{{element.valueObjectType}}>{% endif %} list = null;{% elif element.returnType == 'vo' %}{{ element.valueObjectName }} vo = new {{ element.valueObjectName }}();{% elif element.returnType == 'int' %}	int returnId = 0;	{% endif %}
     	try{
-    		list = new List{% if element.valueObjectType != '' %}<{{element.valueObjectType}}>{% endif %}();
+    		list = new LinkedList{% if element.valueObjectType != '' %}<{{element.valueObjectType}}>{% endif %}();
     		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)		
     											.withProcedureName({{ element.storedProcedureName }})
     											.returningResultSet({{ element.valueObjectType }} , BeanPropertyRowMapper.newInstance({{ element.valueObjectType }}.class));

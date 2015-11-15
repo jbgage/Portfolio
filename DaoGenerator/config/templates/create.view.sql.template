@@ -2,10 +2,10 @@ USE {{ schemaName }};
 GO
 
 {% for view in viewList  %}
-IF (OBJECT_ID ({{ databaseName }}.{{ view.name }}, V)) IS NOT NULL 
-	DROP VIEW {{ databaseName }}.{{ view.name }}
+IF (OBJECT_ID ({{ databaseName }}.{{ view.viewName }}, 'V')) IS NOT NULL 
+	DROP VIEW {{ databaseName }}.{{ view.viewName }}
 GO
-CREATE VIEW {{ databaseName }}.{{ view.name }}
+CREATE VIEW {{ databaseName }}.{{ view.viewName }}
 AS
 	SELECT
 	{% for element in view.selectClause  %}
